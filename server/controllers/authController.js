@@ -1,8 +1,14 @@
 import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 const hashPassword = async (value, salt) => {
     const result = await bcrypt.hash(value, salt);
+    return result;
+};
+
+const checkPassword = async (value, hashedValue) => {
+    const result = await bcrypt.compare(value, hashedValue);
     return result;
 };
 
@@ -41,4 +47,61 @@ export const signup = async (req, res) => {
     } catch (error) {
         console.log(`Error during signup: ${error.message}`);
     }
+};
+
+export const signin = async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        if (!email || !password) {
+            return res.status(400).json({
+                message: "Email and password are required.",
+                success: false,
+            });
+        }
+
+        const existingUser = await User.findOne({ email }).select("+password");
+        if (!existingUser) {
+            return res.status(400).json({
+                message: "User does not exist.",
+                success: false,
+            });
+        }
+
+        const result = await checkPassword(password, existingUser.password);
+        if (!result) {
+            return res.status(400).json({
+                message: "Invalid credentials.",
+                success: false,
+            });
+        }
+        const token = jwt.sign(
+            {
+                userId: existingUser._id,
+                email: existingUser.email,
+            },
+            process.env.TOKEN_SECRET,
+            {
+                expiresIn: "8h",
+            }
+        );
+        res.cookie("Authorization", "Bearer" + token, {
+            expires: new Date(Date.now() + 8 * 3600000),
+            httpOnly: process.env.NODE_ENV === "production",
+            secure: process.env.NODE_ENV === "production",
+        }).json({
+            message: "Logged in successfully.",
+            success: true,
+            token,
+        });
+    } catch (error) {
+        console.log(`Error during signup: ${error.message}`);
+    }
+};
+
+export const signout = async (req, res) => {
+    res.clearCookie("Authorization").status(200).json({
+        message: "Logged out successfully.",
+        success: true,
+    });
 };
