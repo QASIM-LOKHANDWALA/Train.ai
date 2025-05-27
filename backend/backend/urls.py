@@ -16,6 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 API_PATH = 'api/v1'
 
@@ -24,4 +26,4 @@ urlpatterns = [
     path(f'{API_PATH}/regression/', include('regression_model.urls')),
     path(f'{API_PATH}/decision-tree/', include('decision_tree.urls')),
     path(f'{API_PATH}/k-neighbors/', include('k_neighbors.urls')),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

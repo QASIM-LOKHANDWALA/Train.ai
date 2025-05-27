@@ -1,3 +1,4 @@
+from django.core.files import File
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -5,6 +6,12 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, confusion_matrix, recall_score
 import pandas as pd
+
+import joblib
+from tempfile import NamedTemporaryFile
+import os
+
+from trained_model.models import TrainedModel
 
 class KNeighborsView(APIView):
     def hyperparameter_tuning(self, x_train, y_train, x_test, y_test):
@@ -42,6 +49,20 @@ class KNeighborsView(APIView):
         x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
         
         best_params, best_score = self.hyperparameter_tuning(x_train, y_train, x_test, y_test)
+        
+        temp_file = NamedTemporaryFile(delete=False, suffix=".pkl")
+        joblib.dump(best_params['model'], temp_file.name)
+        
+        with open(temp_file.name, 'rb') as f:
+            django_file = File(f)
+            ml_model = TrainedModel.objects.create(
+                model_type=TrainedModel.ModelType.KNN,
+                target_column=target_col,
+                features=",".join(X.columns),
+                user_id=request.user.id if request.user.is_authenticated else "None"
+            )
+            ml_model.model_file.save(f"{ml_model.id}_model.pkl", django_file)
+            ml_model.save()
         
         return Response({
             "best_params": best_params.get('neighbors'),

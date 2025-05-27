@@ -1,3 +1,4 @@
+from django.core.files import File
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -6,6 +7,12 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.preprocessing import PolynomialFeatures
 import pandas as pd
+
+import joblib
+from tempfile import NamedTemporaryFile
+import os
+
+from trained_model.models import TrainedModel
 
 
 class LinearRegressionView(APIView):
@@ -32,6 +39,20 @@ class LinearRegressionView(APIView):
         
         mse = mean_squared_error(y_test, y_pred)
         r2 = r2_score(y_test, y_pred)
+        
+        temp_file = NamedTemporaryFile(delete=False, suffix=".pkl")
+        joblib.dump(model, temp_file.name)
+        
+        with open(temp_file.name, 'rb') as f:
+            django_file = File(f)
+            ml_model = TrainedModel.objects.create(
+                model_type=TrainedModel.ModelType.LINEAR_REGRESSION,
+                target_column=target_col,
+                features=",".join(X.columns),
+                user_id=request.user.id if request.user.is_authenticated else "None"
+            )
+            ml_model.model_file.save(f"{ml_model.id}_model.pkl", django_file)
+            ml_model.save()
         
         response_data = {
             'mean_squared_error': mse,
@@ -85,6 +106,20 @@ class PolynomialRegressionView(APIView):
                 best_r2 = r2
                 best_degree = i
                 best_mse = mse
+        
+        temp_file = NamedTemporaryFile(delete=False, suffix=".pkl")
+        joblib.dump(model, temp_file.name)
+        
+        with open(temp_file.name, 'rb') as f:
+            django_file = File(f)
+            ml_model = TrainedModel.objects.create(
+                model_type=TrainedModel.ModelType.LINEAR_REGRESSION,
+                target_column=target_col,
+                features=",".join(X.columns),
+                user_id=request.user.id if request.user.is_authenticated else "None"
+            )
+            ml_model.model_file.save(f"{ml_model.id}_model.pkl", django_file)
+            ml_model.save()
         
         response_data = {
             'degree': best_degree,
