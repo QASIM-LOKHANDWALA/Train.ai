@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'regression_model',
     'decision_tree',
+    'k_neighbors',
 ]
 
 MIDDLEWARE = [

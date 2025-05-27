@@ -23,4 +23,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path(f'{API_PATH}/regression/', include('regression_model.urls')),
     path(f'{API_PATH}/decision-tree/', include('decision_tree.urls')),
+    path(f'{API_PATH}/k-neighbors/', include('k_neighbors.urls')),
 ]
