@@ -21,5 +21,6 @@ API_PATH = 'api/v1'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path(f'{API_PATH}/regression/', include('regression_model.urls'))
+    path(f'{API_PATH}/regression/', include('regression_model.urls')),
+    path(f'{API_PATH}/decision-tree/', include('decision_tree.urls')),
 ]
