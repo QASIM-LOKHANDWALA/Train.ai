@@ -3,6 +3,8 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
 
+import authRouter from "./routers/authRouter.js";
+
 const app = express();
 app.use(cors());
 app.use(cookieParser());
@@ -17,6 +19,8 @@ mongoose
     .catch((err) => {
         console.error("Database connection error:", err);
     });
+
+app.use("/api/v1/auth", authRouter);
 
 app.listen(process.env.PORT || 3000, () => {
     console.log("Listening...");
