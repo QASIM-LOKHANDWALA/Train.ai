@@ -1,4 +1,6 @@
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
 
 export const identifier = (req, res, next) => {
     let token;
@@ -17,13 +19,13 @@ export const identifier = (req, res, next) => {
 
     try {
         const userToken = token.split(" ")[1];
-        const verified = jwt.verify(userToken, process.env.JWT_SECRET);
+        const verified = jwt.verify(userToken, process.env.TOKEN_SECRET);
 
         if (verified) {
             req.user = verified;
             next();
         }
-        throw new Error("Token verification failed");
+        // throw new Error("Token verification failed");
     } catch (error) {
         console.log(`Error during identification: ${error.message}`);
     }

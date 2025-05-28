@@ -16,9 +16,9 @@ const userSchema = new mongoose.Schema(
             select: false,
         },
         full_name: { type: String },
-        created_at: { type: Date, default: Date.now },
         verification_code: { type: String, select: false },
         verification_code_validation: { type: Number, select: false },
+        premium_user: { type: Boolean, default: false },
     },
     {
         timestamps: true,

@@ -85,7 +85,7 @@ export const signin = async (req, res) => {
                 expiresIn: "8h",
             }
         );
-        res.cookie("Authorization", "Bearer" + token, {
+        res.cookie("Authorization", "Bearer " + token, {
             expires: new Date(Date.now() + 8 * 3600000),
             httpOnly: process.env.NODE_ENV === "production",
             secure: process.env.NODE_ENV === "production",
