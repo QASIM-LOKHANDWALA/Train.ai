@@ -2,6 +2,7 @@ from django.core.files import File
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, confusion_matrix, recall_score
@@ -14,6 +15,9 @@ import os
 from trained_model.models import TrainedModel
 
 class KNeighborsView(APIView):
+    
+    permission_classes = [IsAuthenticated]
+    
     def hyperparameter_tuning(self, x_train, y_train, x_test, y_test):
         best_score = 0
         best_params = {}

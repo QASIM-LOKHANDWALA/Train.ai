@@ -2,6 +2,7 @@ from django.core.files import File
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, r2_score
@@ -16,6 +17,9 @@ from trained_model.models import TrainedModel
 
 
 class LinearRegressionView(APIView):
+    
+    permission_classes = [IsAuthenticated]
+    
     def post(self, request):
         data = request.data
         target_col = data.get('target_col')
@@ -78,6 +82,9 @@ def polynomial_degree_trainer(degree, x_train, y_train, x_test, y_test, model):
 
 
 class PolynomialRegressionView(APIView):
+    
+    permission_classes = [IsAuthenticated]
+    
     def post(self, request):
         data = request.data
         target_col = data.get('target_col')
