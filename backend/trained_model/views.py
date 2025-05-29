@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 from django.http import Http404
 
@@ -11,7 +12,18 @@ import joblib
 from sklearn.preprocessing import PolynomialFeatures
 import numpy as np
 
+class UserTrainedModelView(APIView):
+    
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        userId = request.user.id
+        trained_models = TrainedModel.objects.filter(user_id=userId)
+        serializer = TrainedModelSerializer(trained_models, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)    
+
 class ModelListView(APIView):
+    
     def get(self, request):
         trained_models = TrainedModel.objects.filter(is_public=True)
         serializer = TrainedModelSerializer(trained_models, many=True)
