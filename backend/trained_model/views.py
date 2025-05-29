@@ -7,6 +7,16 @@ from django.http import Http404
 from .models import TrainedModel
 from .serializer import TrainedModelSerializer
 
+import joblib
+import os
+import numpy as np
+
+class ModelListView(APIView):
+    def get(self, request):
+        trained_models = TrainedModel.objects.filter(is_public=True)
+        serializer = TrainedModelSerializer(trained_models, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 class ModelDetailView(APIView):
     
     permission_classes = [IsAuthenticated]
@@ -21,6 +31,27 @@ class ModelDetailView(APIView):
         trained_model = self.get_object(pk)
         serializer = TrainedModelSerializer(trained_model)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def post(self, request, pk):
+        trained_model = self.get_object(pk)
+        model_file = trained_model.model_file.path
+        
+        try:
+            model = joblib.load(model_file)
+        except Exception as e:
+            print(f"Error loading model: {e}")
+        
+        features_input = request.data.get('features')
+        if not features_input or not isinstance(features_input, list):
+            return Response({'error': 'Invalid or missing "features" list'}, status=400)
+        
+        try:
+            features_array = np.array([features_input])
+            prediction = model.predict(features_array)
+        except Exception as e:
+            return Response({'error': f'Prediction failed: {str(e)}'}, status=500)
+
+        return Response({'prediction': prediction.tolist()}, status=200)
     
     def put(self, request, pk):
         trained_model = self.get_object(pk)
