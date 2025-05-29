@@ -5,6 +5,7 @@ import uuid
 class TrainedModel(models.Model):
     class ModelType(models.TextChoices):
         LINEAR_REGRESSION = 'LinearRegression', 'Linear Regression'
+        POLYNOMIAL_REGRESSION = 'PolynomialRegression', 'Polynomial Regression'
         DECISION_TREE = 'DecisionTree', 'Decision Tree'
         KNN = 'KNN', 'K-Nearest Neighbors'
 
@@ -18,6 +19,7 @@ class TrainedModel(models.Model):
         max_length=50,
         choices=ModelType.choices
     )
+    polynomial_degree = models.IntegerField(null=True, blank=True)
     model_name = models.CharField(max_length=100)
     target_column = models.CharField(max_length=100)
     features = models.TextField(null=True, blank=True)

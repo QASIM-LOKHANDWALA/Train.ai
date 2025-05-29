@@ -44,23 +44,17 @@ class DecisionTreeView(APIView):
         if target_col not in df.columns:
             return Response({"error": "Target column not found in the dataset."}, status=status.HTTP_400_BAD_REQUEST)
         
-        if df.isnull().values.any():
-            return Response({"error": "Dataset contains null values."}, status=status.HTTP_400_BAD_REQUEST)
+        if df.isnull().values.any() and df.isnull().values.sum() > 50:
+            return Response({"error": "Dataset contains a large number of null values."}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            df = df.dropna()
         
         y = df[target_col].astype(int)
         X = df.drop(columns=[target_col])
 
         X = pd.get_dummies(X, drop_first=True)
         
-        print("y type:", type(y))
-        print("y dtype:", y.dtype)
-        print("y unique values:", y.unique())
-        print("y shape:", y.shape)
-        
         x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-        print("x_train type:", type(x_train))
-        print("x_train shape:", x_train.shape)
-        print("x_train head:\n", x_train.head())
         
         best_params, best_score = self.hyperparameter_tuning(x_train, y_train, x_test, y_test)
         

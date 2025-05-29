@@ -43,8 +43,10 @@ class KNeighborsView(APIView):
         if target_col not in df.columns:
             return Response({"error": "Target column not found in the dataset."}, status=status.HTTP_400_BAD_REQUEST)
         
-        if df.isnull().values.any():
-            return Response({"error": "Dataset contains null values."}, status=status.HTTP_400_BAD_REQUEST)
+        if df.isnull().values.any() and df.isnull().values.sum() > 50:
+            return Response({"error": "Dataset contains a large number of null values."}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            df = df.dropna()
         
         y = df[target_col].astype(int)
         X = df.drop(columns=[target_col])
