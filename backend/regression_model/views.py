@@ -33,7 +33,7 @@ class LinearRegressionView(APIView):
         if df.isnull().values.any():
             return Response({"error": "Dataset contains null values."}, status=status.HTTP_400_BAD_REQUEST)
         
-        X = df.drop(columns=[target_col])
+        X = pd.get_dummies(df.drop(columns=[target_col]), drop_first=True)
         y = df[target_col]
         
         x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -99,8 +99,8 @@ class PolynomialRegressionView(APIView):
 
         if df.isnull().values.any():
             return Response({"error": "Dataset contains null values."}, status=status.HTTP_400_BAD_REQUEST)
-
-        X = df.drop(columns=[target_col])
+        
+        X = pd.get_dummies(df.drop(columns=[target_col]), drop_first=True)
         y = df[target_col]
 
         x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
