@@ -22,6 +22,7 @@ class LinearRegressionView(APIView):
     
     def post(self, request):
         data = request.data
+        model_name = data.get('model_name', 'Linear Regression')
         target_col = data.get('target_col')
         csv_file = request.FILES['csv_file']
         df = pd.read_csv(csv_file)
@@ -51,6 +52,7 @@ class LinearRegressionView(APIView):
             django_file = File(f)
             ml_model = TrainedModel.objects.create(
                 model_type=TrainedModel.ModelType.LINEAR_REGRESSION,
+                model_name=model_name,
                 target_column=target_col,
                 features=",".join(X.columns),
                 user_id=request.user.id if request.user.is_authenticated else "None"
@@ -87,6 +89,7 @@ class PolynomialRegressionView(APIView):
     
     def post(self, request):
         data = request.data
+        model_name = data.get('model_name', 'Polynomial Regression')
         target_col = data.get('target_col')
         csv_file = request.FILES['csv_file']
         df = pd.read_csv(csv_file)
@@ -121,6 +124,7 @@ class PolynomialRegressionView(APIView):
             django_file = File(f)
             ml_model = TrainedModel.objects.create(
                 model_type=TrainedModel.ModelType.LINEAR_REGRESSION,
+                model_name=model_name,
                 target_column=target_col,
                 features=",".join(X.columns),
                 user_id=request.user.id if request.user.is_authenticated else "None"

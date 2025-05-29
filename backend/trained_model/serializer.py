@@ -7,6 +7,7 @@ class TrainedModelSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'user_id',
+            'model_name',
             'model_type',
             'target_column',
             'features',

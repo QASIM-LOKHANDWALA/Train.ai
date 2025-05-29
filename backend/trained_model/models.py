@@ -18,6 +18,7 @@ class TrainedModel(models.Model):
         max_length=50,
         choices=ModelType.choices
     )
+    model_name = models.CharField(max_length=100)
     target_column = models.CharField(max_length=100)
     features = models.TextField(null=True, blank=True)
     model_file = models.FileField(upload_to='models/', null=True, blank=True)

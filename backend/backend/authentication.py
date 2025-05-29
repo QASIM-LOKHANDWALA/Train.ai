@@ -24,7 +24,7 @@ class CookieJWTAuthentication(authentication.BaseAuthentication):
         token = token.replace("Bearer%20", "").replace("Bearer ", "")
         if token.startswith("Bearer "):
             token = token.split(" ")[1]
-        print(token)
+        # print(token)
 
         try:
             payload = jwt.decode(token, os.getenv('JWT_SECRET_KEY'), algorithms=["HS256"])
