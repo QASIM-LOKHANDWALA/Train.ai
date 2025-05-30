@@ -16,8 +16,7 @@ const userSchema = new mongoose.Schema(
             select: false,
         },
         full_name: { type: String },
-        verification_code: { type: String, select: false },
-        verification_code_validation: { type: Number, select: false },
+        limit: { type: Number, default: 20 },
         premium_user: { type: Boolean, default: false },
     },
     {

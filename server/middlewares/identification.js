@@ -23,6 +23,7 @@ export const identifier = (req, res, next) => {
 
         if (verified) {
             req.user = verified;
+            console.log(req.user);
             next();
         }
         // throw new Error("Token verification failed");
