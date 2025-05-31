@@ -23,7 +23,7 @@ export const trainModel = async (req, res) => {
         console.log("Uploaded file:", req.file);
 
         const formData = new FormData();
-        formData.append("name", req.body["name"]);
+        formData.append("model_name", req.body["model_name"]);
         formData.append("target_col", req.body["target_col"]);
         formData.append("csv_file", req.file.buffer, {
             filename: req.file.originalname,

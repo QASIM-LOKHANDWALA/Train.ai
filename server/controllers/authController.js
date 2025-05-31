@@ -13,12 +13,12 @@ const checkPassword = async (value, hashedValue) => {
 };
 
 export const signup = async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password, full_name } = req.body;
 
     try {
-        if (!email || !password) {
+        if (!email || !password || !full_name) {
             return res.status(400).json({
-                message: "Email and password are required.",
+                message: "All fields are required.",
                 success: false,
             });
         }
@@ -35,6 +35,7 @@ export const signup = async (req, res) => {
         const newUser = new User({
             email,
             password: hashedPassword,
+            full_name,
         });
         const result = await newUser.save();
         result.password = undefined;
@@ -75,6 +76,10 @@ export const signin = async (req, res) => {
                 success: false,
             });
         }
+
+        const userObj = existingUser.toObject();
+        delete userObj.password;
+
         const token = jwt.sign(
             {
                 userId: existingUser._id,
@@ -92,6 +97,7 @@ export const signin = async (req, res) => {
         }).json({
             message: "Logged in successfully.",
             success: true,
+            user: userObj,
             token,
         });
     } catch (error) {
