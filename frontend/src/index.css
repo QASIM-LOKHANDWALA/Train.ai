@@ -1,1 +1,75 @@
 @import "tailwindcss";
+
+@theme {
+    /* Rich Black */
+    --color-rich-black-100: #020205;
+    --color-rich-black-200: #04040a;
+    --color-rich-black-300: #06060f;
+    --color-rich-black-400: #080815;
+    --color-rich-black-500: #0a0a1a;
+    --color-rich-black-600: #25255e;
+    --color-rich-black-700: #3f3fa2;
+    --color-rich-black-800: #7676ca;
+    --color-rich-black-900: #bbbbe4;
+    --color-rich-black: #0a0a1a;
+
+    /* Raisin Black */
+    --color-raisin-black-100: #050508;
+    --color-raisin-black-200: #0a0a10;
+    --color-raisin-black-300: #0f0f19;
+    --color-raisin-black-400: #141421;
+    --color-raisin-black-500: #1a1a2a;
+    --color-raisin-black-600: #3b3b60;
+    --color-raisin-black-700: #5d5d97;
+    --color-raisin-black-800: #9191bc;
+    --color-raisin-black-900: #c8c8dd;
+    --color-raisin-black: #1a1a2a;
+
+    /* Raisin Black Alt (using the second definition) */
+    --color-raisin-black-alt-100: #08080b;
+    --color-raisin-black-alt-200: #101117;
+    --color-raisin-black-alt-300: #181922;
+    --color-raisin-black-alt-400: #20212e;
+    --color-raisin-black-alt-500: #282a3a;
+    --color-raisin-black-alt-600: #4a4d6a;
+    --color-raisin-black-alt-700: #6d7299;
+    --color-raisin-black-alt-800: #9ea1bb;
+    --color-raisin-black-alt-900: #ced0dd;
+    --color-raisin-black-alt: #282a3a;
+
+    /* Anti-Flash White */
+    --color-anti-flash-white-100: #303030;
+    --color-anti-flash-white-200: #606060;
+    --color-anti-flash-white-300: #909090;
+    --color-anti-flash-white-400: #c0c0c0;
+    --color-anti-flash-white-500: #f0f0f0;
+    --color-anti-flash-white-600: #f3f3f3;
+    --color-anti-flash-white-700: #f6f6f6;
+    --color-anti-flash-white-800: #f9f9f9;
+    --color-anti-flash-white-900: #fcfcfc;
+    --color-anti-flash-white: #f0f0f0;
+
+    /* Dark Orange (Web) */
+    --color-dark-orange-100: #331c00;
+    --color-dark-orange-200: #663800;
+    --color-dark-orange-300: #995400;
+    --color-dark-orange-400: #cc7000;
+    --color-dark-orange-500: #ff8c00;
+    --color-dark-orange-600: #ffa333;
+    --color-dark-orange-700: #ffba66;
+    --color-dark-orange-800: #ffd199;
+    --color-dark-orange-900: #ffe8cc;
+    --color-dark-orange: #ff8c00;
+
+    /* Goldenrod */
+    --color-goldenrod-100: #2b2106;
+    --color-goldenrod-200: #57420d;
+    --color-goldenrod-300: #826313;
+    --color-goldenrod-400: #ae841a;
+    --color-goldenrod-500: #daa520;
+    --color-goldenrod-600: #e4b84a;
+    --color-goldenrod-700: #ebca77;
+    --color-goldenrod-800: #f1dca4;
+    --color-goldenrod-900: #f8edd2;
+    --color-goldenrod: #daa520;
+}
