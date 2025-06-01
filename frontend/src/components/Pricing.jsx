@@ -2,13 +2,13 @@ import React from "react";
 
 const Pricing = () => {
     return (
-        <div className="min-h-screen bg-gradient-to-br from-rich-black-300 via-rich-black-400 to-raisin-black-300 py-20 px-4">
+        <div className="min-h-screen bg-gradient-to-br from-rich-black-300 via-rich-black-400 to-raisin-black-300 py-10 px-4">
             <div className="max-w-7xl mx-auto">
                 <div className="text-center mb-16">
-                    <h1 className="text-4xl md:text-5xl font-bold text-anti-flash-white-500 mb-4">
+                    <h1 className="text-2xl md:text-3xl font-bold text-anti-flash-white-500 mb-4">
                         Choose Your Plan
                     </h1>
-                    <p className="text-anti-flash-white-400 text-lg max-w-2xl mx-auto">
+                    <p className="text-anti-flash-white-400 text-sm max-w-2xl mx-auto">
                         Select the perfect plan for your needs. Upgrade or
                         downgrade at any time.
                     </p>
@@ -22,18 +22,18 @@ const Pricing = () => {
 
                         <div className="flex flex-col items-center text-center">
                             <div className="mb-6 relative z-10">
-                                <p className="text-goldenrod-500 text-xl font-semibold tracking-wide uppercase">
+                                <p className="text-goldenrod-500 text-lg font-semibold tracking-wide uppercase">
                                     Basic
                                 </p>
                                 <div className="h-0.5 w-12 bg-gradient-to-r from-goldenrod-500 to-dark-orange-500 mx-auto mt-2"></div>
                             </div>
 
-                            <p className="text-anti-flash-white-400 text-base mb-8 leading-relaxed">
+                            <p className="text-anti-flash-white-400 text-base mb-6 leading-relaxed">
                                 Perfect for getting started with essential
                                 features
                             </p>
 
-                            <ul className="text-anti-flash-white-300 text-sm space-y-2 mb-8">
+                            <ul className="text-anti-flash-white-300 text-sm space-y-1 mb-6">
                                 <li className="flex items-center">
                                     <span className="w-2 h-2 bg-goldenrod-500 rounded-full mr-3"></span>
                                     100 Credits per month
@@ -87,11 +87,11 @@ const Pricing = () => {
                                 <div className="h-1 w-16 bg-gradient-to-r from-goldenrod-400 to-dark-orange-400 mx-auto mt-2"></div>
                             </div>
 
-                            <p className="text-anti-flash-white-300 text-base mb-8 leading-relaxed">
+                            <p className="text-anti-flash-white-300 text-base mb-6 leading-relaxed">
                                 Everything you need to scale your business
                             </p>
 
-                            <ul className="text-anti-flash-white-200 text-sm space-y-3 mb-8">
+                            <ul className="text-anti-flash-white-200 text-sm space-y-3 mb-6">
                                 <li className="flex items-center">
                                     <span className="w-2 h-2 bg-dark-orange-500 rounded-full mr-3"></span>
                                     Unlimited Credits
@@ -146,17 +146,17 @@ const Pricing = () => {
 
                         <div className="flex flex-col items-center text-center">
                             <div className="mb-6 relative z-10">
-                                <p className="text-goldenrod-500 text-xl font-semibold tracking-wide uppercase">
+                                <p className="text-goldenrod-500 text-lg font-semibold tracking-wide uppercase">
                                     Enterprise
                                 </p>
                                 <div className="h-0.5 w-12 bg-gradient-to-r from-goldenrod-500 to-dark-orange-500 mx-auto mt-2"></div>
                             </div>
 
-                            <p className="text-anti-flash-white-400 text-base mb-8 leading-relaxed">
+                            <p className="text-anti-flash-white-400 text-base mb-6 leading-relaxed">
                                 Custom solutions for large organizations
                             </p>
 
-                            <ul className="text-anti-flash-white-300 text-sm space-y-2 mb-8">
+                            <ul className="text-anti-flash-white-300 text-sm space-y-1 mb-6">
                                 <li className="flex items-center">
                                     <span className="w-2 h-2 bg-goldenrod-500 rounded-full mr-3"></span>
                                     Custom Credits
