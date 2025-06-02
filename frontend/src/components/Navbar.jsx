@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -9,19 +10,18 @@ export default function Navbar() {
 
     return (
         <nav className="h-[70px] relative w-full px-6 md:px-16 lg:px-24 xl:px-32 flex items-center justify-between z-20 bg-gradient-to-br from-raisin-black-100 to-rich-black-300 text-anti-flash-white-900 shadow-[0px_4px_25px_0px_#080815] transition-all">
-            <a href="#">
-                <img
-                    className="h-9 invert"
-                    src="logo.png"
-                    alt="dummyLogoColored"
-                />
-            </a>
+            <Link to="/home">
+                <img className="h-9 invert" src="logo.png" />
+            </Link>
 
             <ul className="md:flex hidden items-center gap-10">
                 <li>
-                    <a className="hover:text-gray-500/80 transition" href="#">
+                    <Link
+                        className="hover:text-gray-500/80 transition"
+                        to="/home"
+                    >
                         Home
-                    </a>
+                    </Link>
                 </li>
                 <li>
                     <a className="hover:text-gray-500/80 transition" href="#">
@@ -34,18 +34,21 @@ export default function Navbar() {
                     </a>
                 </li>
                 <li>
-                    <a className="hover:text-gray-500/80 transition" href="#">
+                    <Link
+                        className="hover:text-gray-500/80 transition"
+                        to="/pricing"
+                    >
                         Pricing
-                    </a>
+                    </Link>
                 </li>
             </ul>
 
-            <button
-                type="button"
-                className="bg-gradient-to-r from-dark-orange-500 to-goldenrod-500 text-rich-black-400 md:inline hidden text-sm hover:bg-gray-50 active:scale-95 transition-all w-40 h-11 rounded-full"
+            <Link
+                to="/auth"
+                className="bg-gradient-to-r from-dark-orange-500 to-goldenrod-500 text-rich-black-400 text-sm hover:bg-gray-50 active:scale-95 transition-all w-40 h-11 rounded-full flex items-center justify-center"
             >
                 Get started
-            </button>
+            </Link>
 
             <button
                 aria-label="menu-btn"
@@ -71,9 +74,9 @@ export default function Navbar() {
             >
                 <ul className="flex flex-col space-y-4 text-lg">
                     <li>
-                        <a href="#" className="text-sm">
+                        <Link to="/home" className="text-sm">
                             Home
-                        </a>
+                        </Link>
                     </li>
                     <li>
                         <a href="#" className="text-sm">
@@ -86,18 +89,18 @@ export default function Navbar() {
                         </a>
                     </li>
                     <li>
-                        <a href="#" className="text-sm">
+                        <Link to="/pricing" className="text-sm">
                             Pricing
-                        </a>
+                        </Link>
                     </li>
                 </ul>
 
-                <button
-                    type="button"
-                    className="bg-gradient-to-r from-dark-orange-500 to-goldenrod-500 text-rich-black-400  mt-6 text-sm hover:bg-gray-50 active:scale-95 transition-all w-40 h-11 rounded-full"
+                <Link
+                    to="/auth"
+                    className="bg-gradient-to-r from-dark-orange-500 to-goldenrod-500 text-rich-black-400 mt-6 text-sm hover:bg-gray-50 active:scale-95 transition-all w-40 h-11 rounded-full flex items-center justify-center"
                 >
                     Get started
-                </button>
+                </Link>
             </div>
         </nav>
     );

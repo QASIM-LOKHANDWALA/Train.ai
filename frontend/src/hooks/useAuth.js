@@ -14,13 +14,6 @@ export const useAuth = () => {
         (state) => state.auth
     );
 
-    // Check authentication on hook initialization
-    // useEffect(() => {
-    //     if (!isAuthenticated && !isLoading) {
-    //         dispatch(checkAuth());
-    //     }
-    // }, [dispatch, isAuthenticated, isLoading]);
-
     const signup = (credentials) => {
         return dispatch(signupUser(credentials));
     };

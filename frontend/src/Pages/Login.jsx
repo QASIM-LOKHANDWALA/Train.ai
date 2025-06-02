@@ -1,12 +1,15 @@
 import React from "react";
 import { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
     const [login, setLogin] = useState(true);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    const navigate = useNavigate();
 
     const {
         user,
@@ -28,9 +31,11 @@ const Login = () => {
             if (!login) {
                 await signup({ email, password, full_name: name }).unwrap();
                 alert("Account created successfully!");
+                setLogin(true);
             } else {
                 await signin({ email, password }).unwrap();
                 alert("Logged in successfully!");
+                navigate("/home");
             }
         } catch (err) {
             console.error("Authentication error:", err);
