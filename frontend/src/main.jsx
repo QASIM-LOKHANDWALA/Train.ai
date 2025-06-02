@@ -1,12 +1,25 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { createRoot } from "react-dom/client";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import { store } from "./redux/store.js";
 import "./index.css";
 import App from "./App.jsx";
 import Login from "./pages/Login.jsx";
 import Home from "./pages/Home.jsx";
+import LandingPage from "./pages/LandingPage.jsx";
 import Pricing from "./components/Pricing.jsx";
+
+function ProtectedRoute({ children }) {
+    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
+    return isAuthenticated ? children : <LandingPage />;
+}
+
+function PublicRoute({ children }) {
+    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
+    return isAuthenticated ? <Home /> : children;
+}
 
 const router = createBrowserRouter([
     {
@@ -15,17 +28,29 @@ const router = createBrowserRouter([
         children: [
             {
                 path: "home",
-                element: <Home />,
+                element: (
+                    <ProtectedRoute>
+                        <Home />
+                    </ProtectedRoute>
+                ),
             },
             {
                 path: "pricing",
-                element: <Pricing />,
+                element: (
+                    <ProtectedRoute>
+                        <Pricing />
+                    </ProtectedRoute>
+                ),
             },
         ],
     },
     {
         path: "auth",
-        element: <Login />,
+        element: (
+            <PublicRoute>
+                <Login />
+            </PublicRoute>
+        ),
     },
 ]);
 
