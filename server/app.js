@@ -7,8 +7,14 @@ import authRouter from "./routers/authRouter.js";
 import userRouter from "./routers/userRouter.js";
 import modelRouter from "./routers/modelRouter.js";
 
+const corsOptions = {
+    origin: "http://localhost:5173",
+    credentials: true,
+    optionsSuccessStatus: 200,
+};
+
 const app = express();
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

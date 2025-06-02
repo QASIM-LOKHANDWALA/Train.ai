@@ -24,13 +24,20 @@ export const signupUser = createAsyncThunk(
                 }
             );
 
-            if (!response.success) {
-                return rejectWithValue(response.message);
+            const data = response.data;
+
+            if (!data.success) {
+                return rejectWithValue(data.message);
             }
 
-            return response;
+            return data;
         } catch (error) {
-            return rejectWithValue(error.message);
+            if (error.response && error.response.data) {
+                return rejectWithValue(
+                    error.response.data.message || "Server error"
+                );
+            }
+            return rejectWithValue(error.message || "Network error");
         }
     }
 );
@@ -39,41 +46,71 @@ export const signinUser = createAsyncThunk(
     "auth/signin",
     async ({ email, password }, { rejectWithValue }) => {
         try {
+            console.log("Attempting signin with:", { email });
+
             const response = await axios.post(
                 "http://127.0.0.1:5050/api/v1/auth/signin",
-                { email, password }
+                { email, password },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
             );
 
-            if (!response.success) {
-                return rejectWithValue(response.message);
+            const data = response.data;
+            console.log("Response data:", data);
+
+            if (!data.success) {
+                return rejectWithValue(data.message);
             }
 
-            if (response.token) {
-                localStorage.setItem("token", response.token);
+            if (data.token) {
+                localStorage.setItem("token", data.token);
+                console.log("Token stored successfully");
             }
 
-            return response;
+            console.log("Signin successful:", data);
+            return data;
         } catch (error) {
-            return rejectWithValue(error.message);
+            console.error("Signin error:", error);
+            if (error.response && error.response.data) {
+                return rejectWithValue(
+                    error.response.data.message || "Server error"
+                );
+            }
+            return rejectWithValue(error.message || "Network error");
         }
     }
 );
 
 export const signoutUser = createAsyncThunk(
     "auth/signout",
-    async (_, { rejectWithValue }) => {
+    async (_, { rejectWithValue, getState }) => {
         try {
-            const response = await axios.get(
-                "http://127.0.0.1:5050/api/v1/auth/signout"
+            const token =
+                getState().auth.token || localStorage.getItem("token");
+
+            const response = await fetch(
+                "http://127.0.0.1:5050/api/v1/auth/signout",
+                {
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        client: "not-browser",
+                    },
+                }
             );
 
-            if (!response.success) {
-                return rejectWithValue(response.message);
+            const data = await response.json();
+
+            if (!response.ok) {
+                return rejectWithValue(data.message);
             }
 
             localStorage.removeItem("token");
 
-            return response;
+            return data;
         } catch (error) {
             return rejectWithValue(error.message);
         }
@@ -83,6 +120,17 @@ export const signoutUser = createAsyncThunk(
 export const authSlice = createSlice({
     name: "user",
     initialState,
+    reducers: {
+        clearError: (state) => {
+            state.error = null;
+        },
+        logout: (state) => {
+            state.user = null;
+            state.token = null;
+            state.isAuthenticated = false;
+            localStorage.removeItem("token");
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(signupUser.pending, (state) => {
@@ -133,5 +181,5 @@ export const authSlice = createSlice({
     },
 });
 
-export const {} = authSlice.actions;
+export const { clearError, logout } = authSlice.actions;
 export default authSlice.reducer;

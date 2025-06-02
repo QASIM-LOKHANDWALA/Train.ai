@@ -14,6 +14,7 @@ const checkPassword = async (value, hashedValue) => {
 
 export const signup = async (req, res) => {
     const { email, password, full_name } = req.body;
+    console.log(`Received signup request for email: ${email}`);
 
     try {
         if (!email || !password || !full_name) {
@@ -40,6 +41,8 @@ export const signup = async (req, res) => {
         const result = await newUser.save();
         result.password = undefined;
 
+        console.log(`New user created: ${result.email}`);
+
         res.status(201).json({
             message: "Account created successfully.",
             success: true,
@@ -52,6 +55,7 @@ export const signup = async (req, res) => {
 
 export const signin = async (req, res) => {
     const { email, password } = req.body;
+    console.log(`Received signin request for email: ${email}`);
 
     try {
         if (!email || !password) {
@@ -79,6 +83,8 @@ export const signin = async (req, res) => {
 
         const userObj = existingUser.toObject();
         delete userObj.password;
+
+        console.log(`User logged in: ${userObj.email}`);
 
         const token = jwt.sign(
             {
