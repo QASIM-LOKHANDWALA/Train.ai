@@ -45,7 +45,7 @@ export default function Navbar() {
 
             <Link
                 to="/auth"
-                className="bg-gradient-to-r from-dark-orange-500 to-goldenrod-500 text-rich-black-400 text-sm hover:bg-gray-50 active:scale-95 transition-all w-40 h-11 rounded-full flex items-center justify-center"
+                className="font-semibold bg-gradient-to-r from-dark-orange-500 to-goldenrod-500 text-rich-black-400 text-sm hover:bg-gray-50 active:scale-95 transition-all w-40 h-11 rounded-full hidden md:flex items-center justify-center"
             >
                 Get started
             </Link>
@@ -97,7 +97,7 @@ export default function Navbar() {
 
                 <Link
                     to="/auth"
-                    className="bg-gradient-to-r from-dark-orange-500 to-goldenrod-500 text-rich-black-400 mt-6 text-sm hover:bg-gray-50 active:scale-95 transition-all w-40 h-11 rounded-full flex items-center justify-center"
+                    className="font-semibold bg-gradient-to-r from-dark-orange-500 to-goldenrod-500 text-rich-black-400 mt-6 text-sm hover:bg-gray-50 active:scale-95 transition-all w-40 h-11 rounded-full flex items-center justify-center"
                 >
                     Get started
                 </Link>
