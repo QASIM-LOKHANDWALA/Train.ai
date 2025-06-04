@@ -1,8 +1,21 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 export default function Navbar() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+    const { isAuthenticated, signout } = useAuth();
+    const navigate = useNavigate();
+
+    const handleSignout = async () => {
+        try {
+            await signout().unwrap();
+            navigate("/auth");
+        } catch (error) {
+            console.log(`Error signing out: ${error.message}`);
+        }
+    };
 
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -43,12 +56,21 @@ export default function Navbar() {
                 </li>
             </ul>
 
-            <Link
-                to="/auth"
-                className="font-semibold bg-gradient-to-r from-dark-orange-500 to-goldenrod-500 text-rich-black-400 text-sm hover:bg-gray-50 active:scale-95 transition-all w-40 h-11 rounded-full hidden md:flex items-center justify-center"
-            >
-                Get started
-            </Link>
+            {isAuthenticated ? (
+                <button
+                    onClick={handleSignout}
+                    className="font-semibold bg-gradient-to-r from-dark-orange-500 to-goldenrod-500 text-rich-black-400 text-sm hover:bg-gray-50 active:scale-95 transition-all w-40 h-11 rounded-full hidden md:flex items-center justify-center"
+                >
+                    Logout
+                </button>
+            ) : (
+                <Link
+                    to="/auth"
+                    className="font-semibold bg-gradient-to-r from-dark-orange-500 to-goldenrod-500 text-rich-black-400 text-sm hover:bg-gray-50 active:scale-95 transition-all w-40 h-11 rounded-full hidden md:flex items-center justify-center"
+                >
+                    Get started
+                </Link>
+            )}
 
             <button
                 aria-label="menu-btn"

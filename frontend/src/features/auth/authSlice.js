@@ -94,7 +94,7 @@ export const signoutUser = createAsyncThunk(
             const response = await fetch(
                 "http://127.0.0.1:5050/api/v1/auth/signout",
                 {
-                    method: "POST",
+                    method: "GET",
                     headers: {
                         Authorization: `Bearer ${token}`,
                         client: "not-browser",
