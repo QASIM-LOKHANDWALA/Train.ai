@@ -66,7 +66,6 @@ class ModelDetailView(APIView):
 
         return Response({'prediction': prediction.tolist()}, status=200)
 
-    
     def put(self, request, pk):
         trained_model = self.get_object(pk)
         data = {
@@ -76,3 +75,26 @@ class ModelDetailView(APIView):
         if(serializer.is_valid()):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
+
+class ModelUpdateView(APIView):
+    
+    permission_classes = [IsAuthenticated]
+    
+    def get_object(self, pk):
+        try:
+            return TrainedModel.objects.get(pk=pk)
+        except TrainedModel.DoesNotExist:
+            raise Http404
+    
+    def put(self, request, pk):
+        trained_model = self.get_object(pk)
+        state = request.data['state']
+        if state == 'like':
+            trained_model.likes += 1
+        elif state == 'dislike' and trained_model.likes > 0:
+            trained_model.likes -= 1
+        else:
+            return Response({'error': 'Invalid state'}, status=status.HTTP_400_BAD_REQUEST)
+        trained_model.save()
+        serializer = TrainedModelSerializer(trained_model)
+        return Response(serializer.data, status=status.HTTP_200_OK)

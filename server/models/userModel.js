@@ -18,6 +18,10 @@ const userSchema = new mongoose.Schema(
         full_name: { type: String },
         limit: { type: Number, default: 20 },
         premium_user: { type: Boolean, default: false },
+        liked_models: {
+            type: Array,
+            default: [],
+        },
     },
     {
         timestamps: true,

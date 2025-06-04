@@ -13,6 +13,7 @@ class TrainedModelSerializer(serializers.ModelSerializer):
             'features',
             'model_file',
             'created_at',
-            'is_public'
+            'is_public',
+            'likes'
         ]
         read_only_fields = ['id', 'created_at']

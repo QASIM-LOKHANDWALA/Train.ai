@@ -26,6 +26,7 @@ class TrainedModel(models.Model):
     model_file = models.FileField(upload_to='models/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_public = models.BooleanField(default=False)
+    likes = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.model_type} | Target: {self.target_column}"
