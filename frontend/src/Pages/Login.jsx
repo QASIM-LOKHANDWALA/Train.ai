@@ -1,13 +1,23 @@
-import React from "react";
 import { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import {
+    LuMail,
+    LuLock,
+    LuUser,
+    LuEye,
+    LuEyeOff,
+    LuSparkles,
+    LuChevronRight,
+} from "react-icons/lu";
 
 const Login = () => {
     const [login, setLogin] = useState(true);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
 
     const navigate = useNavigate();
 
@@ -24,8 +34,7 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        clearAuthError();
-        console.log("Form submitted");
+        console.log("Form submitted", { name, email, password, login });
 
         try {
             if (!login) {
@@ -42,148 +51,188 @@ const Login = () => {
         }
     };
 
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
-
     return (
-        <div className="flex h-[700px] w-full">
-            <div className="w-full hidden md:inline-block">
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-orange-500/20 to-yellow-500/20 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-yellow-500/15 to-orange-500/15 rounded-full blur-3xl"></div>
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-orange-500/5 to-yellow-500/5 rounded-full blur-3xl"></div>
+
+            <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-gray-800/50 to-gray-900/50 z-10"></div>
                 <img
-                    className="h-full"
-                    // src="https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/login/leftSideImage.png"
+                    className="h-full w-full object-cover"
                     src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1965&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                    alt="leftSideImage"
+                    alt="AI Technology Background"
                 />
+                <div className="absolute inset-0 z-20 flex items-center justify-center p-12">
+                    <div className="text-center">
+                        <h2 className="text-4xl font-bold text-white mb-4">
+                            Welcome to the Future of
+                            <span className="block bg-gradient-to-r from-orange-500 to-yellow-500 bg-clip-text text-transparent">
+                                AI Development
+                            </span>
+                        </h2>
+                        <p className="text-xl text-gray-300 max-w-md">
+                            Build powerful AI models without writing a single
+                            line of code
+                        </p>
+                    </div>
+                </div>
             </div>
 
-            <div className="w-full flex flex-col items-center justify-center">
-                <form
-                    className="md:w-96 w-80 flex flex-col items-center justify-center"
-                    onSubmit={handleSubmit}
-                >
-                    <h2 className="text-4xl text-gray-900 font-medium">
-                        {login ? "Sign in" : "Sign up"}
-                    </h2>
-                    <p className="text-sm text-gray-500/90 mt-3">
-                        {login
-                            ? "Welcome back! Please sign in to continue"
-                            : "Create an account to get started"}
-                    </p>
-
-                    {!login && (
-                        <div className="flex items-center mt-8 w-full bg-transparent border border-gray-300/60 h-12 rounded-full overflow-hidden pl-6 gap-2">
-                            <svg
-                                width="16"
-                                height="16"
-                                viewBox="0 0 16 16"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <path
-                                    fillRule="evenodd"
-                                    clipRule="evenodd"
-                                    d="M8 8C10.2091 8 12 6.20914 12 4C12 1.79086 10.2091 0 8 0C5.79086 0 4 1.79086 4 4C4 6.20914 5.79086 8 8 8ZM8 1.5C9.38071 1.5 10.5 2.61929 10.5 4C10.5 5.38071 9.38071 6.5 8 6.5C6.61929 6.5 5.5 5.38071 5.5 4C5.5 2.61929 6.61929 1.5 8 1.5Z"
-                                    fill="#6B7280"
-                                />
-                                <path
-                                    d="M2 14.5C2 11.4624 4.46243 9 7.5 9H8.5C11.5376 9 14 11.4624 14 14.5C14 15.3284 13.3284 16 12.5 16H3.5C2.67157 16 2 15.3284 2 14.5Z"
-                                    fill="#6B7280"
-                                />
-                            </svg>
-                            <input
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                type="text"
-                                placeholder="Full Name"
-                                className="bg-transparent text-gray-500/80 placeholder-gray-500/80 outline-none text-sm w-full h-full"
-                                required
-                            />
+            <div className="w-full lg:w-1/2 flex items-center justify-center p-8 relative z-30">
+                <div className="w-full max-w-md">
+                    <div className="text-center mb-8">
+                        <div className="inline-flex items-center bg-gradient-to-r from-gray-800 to-gray-700 rounded-full px-4 py-2 mb-6 border border-gray-600">
+                            <LuSparkles className="w-4 h-4 text-yellow-500 mr-2" />
+                            <span className="text-gray-300 text-sm font-medium">
+                                Secure Authentication
+                            </span>
                         </div>
-                    )}
 
-                    <div className="flex items-center mt-8 w-full bg-transparent border border-gray-300/60 h-12 rounded-full overflow-hidden pl-6 gap-2">
-                        <svg
-                            width="16"
-                            height="11"
-                            viewBox="0 0 16 11"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path
-                                fillRule="evenodd"
-                                clipRule="evenodd"
-                                d="M0 .55.571 0H15.43l.57.55v9.9l-.571.55H.57L0 10.45zm1.143 1.138V9.9h13.714V1.69l-6.503 4.8h-.697zM13.749 1.1H2.25L8 5.356z"
-                                fill="#6B7280"
-                            />
-                        </svg>
-                        <input
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            type="email"
-                            placeholder="Email id"
-                            className="bg-transparent text-gray-500/80 placeholder-gray-500/80 outline-none text-sm w-full h-full"
-                            required
-                        />
+                        <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">
+                            {login ? "Welcome Back" : "Create Account"}
+                        </h1>
+                        <p className="text-gray-400">
+                            {login
+                                ? "Sign in to continue building amazing AI models"
+                                : "Join thousands of users creating AI solutions"}
+                        </p>
                     </div>
 
-                    <div className="flex items-center mt-6 w-full bg-transparent border border-gray-300/60 h-12 rounded-full overflow-hidden pl-6 gap-2">
-                        <svg
-                            width="13"
-                            height="17"
-                            viewBox="0 0 13 17"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path
-                                d="M13 8.5c0-.938-.729-1.7-1.625-1.7h-.812V4.25C10.563 1.907 8.74 0 6.5 0S2.438 1.907 2.438 4.25V6.8h-.813C.729 6.8 0 7.562 0 8.5v6.8c0 .938.729 1.7 1.625 1.7h9.75c.896 0 1.625-.762 1.625-1.7zM4.063 4.25c0-1.406 1.093-2.55 2.437-2.55s2.438 1.144 2.438 2.55V6.8H4.061z"
-                                fill="#6B7280"
-                            />
-                        </svg>
-                        <input
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            type="password"
-                            placeholder="Password"
-                            className="bg-transparent text-gray-500/80 placeholder-gray-500/80 outline-none text-sm w-full h-full"
-                            required
-                        />
-                    </div>
+                    <div className="space-y-6">
+                        {!login && (
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-gray-400">
+                                    Full Name
+                                </label>
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <LuUser className="h-5 w-5 text-gray-400" />
+                                    </div>
+                                    <input
+                                        type="text"
+                                        value={name}
+                                        onChange={(e) =>
+                                            setName(e.target.value)
+                                        }
+                                        className="w-full pl-12 pr-4 py-3 bg-gradient-to-r from-gray-800 to-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200"
+                                        placeholder="Enter your full name"
+                                        required
+                                    />
+                                </div>
+                            </div>
+                        )}
 
-                    <div className="w-full flex items-center justify-between mt-8 text-gray-500/80">
-                        <div className="flex items-center gap-2">
-                            <input
-                                className="h-5"
-                                type="checkbox"
-                                id="checkbox"
-                            />
-                            <label className="text-sm" htmlFor="checkbox">
-                                Remember me
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium text-gray-400">
+                                Email Address
                             </label>
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <LuMail className="h-5 w-5 text-gray-400" />
+                                </div>
+                                <input
+                                    type="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    className="w-full pl-12 pr-4 py-3 bg-gradient-to-r from-gray-800 to-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200"
+                                    placeholder="Enter your email"
+                                    required
+                                />
+                            </div>
                         </div>
-                        <a className="text-sm underline" href="#">
-                            Forgot password?
-                        </a>
-                    </div>
 
-                    <button
-                        type="submit"
-                        className="mt-8 w-full h-11 rounded-full text-white bg-indigo-500 hover:opacity-90 transition-opacity"
-                    >
-                        {login ? "Login" : "Register"}
-                    </button>
-                    <p className="text-gray-500/90 text-sm mt-4">
-                        {login
-                            ? "Don't have an account?  "
-                            : "Already have an account?  "}
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium text-gray-400">
+                                Password
+                            </label>
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <LuLock className="h-5 w-5 text-gray-400" />
+                                </div>
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    value={password}
+                                    onChange={(e) =>
+                                        setPassword(e.target.value)
+                                    }
+                                    className="w-full pl-12 pr-12 py-3 bg-gradient-to-r from-gray-800 to-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200"
+                                    placeholder="Enter your password"
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    className="absolute inset-y-0 right-0 pr-4 flex items-center"
+                                    onClick={() =>
+                                        setShowPassword(!showPassword)
+                                    }
+                                >
+                                    {showPassword ? (
+                                        <LuEyeOff className="h-5 w-5 text-gray-400 hover:text-yellow-500 transition-colors" />
+                                    ) : (
+                                        <LuEye className="h-5 w-5 text-gray-400 hover:text-yellow-500 transition-colors" />
+                                    )}
+                                </button>
+                            </div>
+                        </div>
+
+                        {login && (
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center">
+                                    <input
+                                        id="remember-me"
+                                        type="checkbox"
+                                        checked={rememberMe}
+                                        onChange={(e) =>
+                                            setRememberMe(e.target.checked)
+                                        }
+                                        className="h-4 w-4 rounded border-gray-600 bg-gray-700 text-orange-500 focus:ring-orange-500 focus:ring-offset-0"
+                                    />
+                                    <label
+                                        htmlFor="remember-me"
+                                        className="ml-2 text-sm text-gray-400"
+                                    >
+                                        Remember me
+                                    </label>
+                                </div>
+                                <button
+                                    type="button"
+                                    className="text-sm text-yellow-500 hover:text-yellow-400 transition-colors"
+                                >
+                                    Forgot password?
+                                </button>
+                            </div>
+                        )}
+
                         <button
-                            className="text-indigo-400 hover:underline"
-                            onClick={() => setLogin(!login)}
+                            type="button"
+                            onClick={handleSubmit}
+                            className="group relative w-full bg-gradient-to-r from-orange-500 to-yellow-500 text-gray-900 py-3 px-4 rounded-xl font-bold text-lg hover:shadow-xl hover:shadow-orange-500/30 active:scale-95 transition-all duration-200 border-2 border-transparent hover:border-yellow-300/50"
                         >
-                            {login ? "Sign up" : "Sign in"}
+                            <span className="relative z-10 flex items-center justify-center">
+                                {login ? "Sign In" : "Create Account"}
+                                <LuChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                            </span>
+                            <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
                         </button>
-                    </p>
-                </form>
+
+                        <div className="text-center">
+                            <p className="text-gray-400">
+                                {login
+                                    ? "Don't have an account?"
+                                    : "Already have an account?"}
+                                <button
+                                    type="button"
+                                    onClick={() => setLogin(!login)}
+                                    className="ml-2 text-yellow-500 hover:text-yellow-400 font-semibold transition-colors"
+                                >
+                                    {login ? "Sign up" : "Sign in"}
+                                </button>
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );
