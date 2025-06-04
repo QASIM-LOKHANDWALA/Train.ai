@@ -9,6 +9,7 @@ import Login from "./pages/Login.jsx";
 import Home from "./pages/Home.jsx";
 import LandingPage from "./pages/LandingPage.jsx";
 import Pricing from "./components/Pricing.jsx";
+import PageNotFound from "./pages/PageNotFound.jsx";
 
 function ProtectedRoute({ children }) {
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
                 <Login />
             </PublicRoute>
         ),
+    },
+    {
+        path: "*",
+        element: <PageNotFound />,
     },
 ]);
 
