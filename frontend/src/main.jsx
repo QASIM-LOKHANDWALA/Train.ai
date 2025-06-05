@@ -29,6 +29,14 @@ const router = createBrowserRouter([
         element: <App />,
         children: [
             {
+                path: "",
+                element: (
+                    <ProtectedRoute>
+                        <LandingPage />
+                    </ProtectedRoute>
+                ),
+            },
+            {
                 path: "home",
                 element: (
                     <ProtectedRoute>

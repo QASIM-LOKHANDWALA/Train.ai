@@ -1,7 +1,6 @@
 import User from "../models/userModel.js";
 import axios from "axios";
 
-// Trial PUSH
 export const profile = async (req, res) => {
     try {
         const userId = req.user.userId;
