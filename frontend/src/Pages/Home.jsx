@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     LuSearch,
     LuFilter,
@@ -7,6 +7,7 @@ import {
     LuGrid3X3,
     LuList,
 } from "react-icons/lu";
+import axios from "axios";
 import ModelCard from "../components/ModelCard";
 
 const Home = () => {
@@ -14,6 +15,17 @@ const Home = () => {
     const [selectedFilter, setSelectedFilter] = useState("all");
     const [viewMode, setViewMode] = useState("grid");
     const [showFilters, setShowFilters] = useState(false);
+
+    const [models, setModels] = useState([]);
+    useEffect(() => {
+        const fetchModels = async () => {
+            const response = await axios.get(
+                "http://127.0.0.1:8000/api/v1/trained-model"
+            );
+            setModels(response.data);
+        };
+        fetchModels();
+    });
 
     const mockModels = [
         {
@@ -65,7 +77,7 @@ const Home = () => {
         "DecisionTree",
     ];
 
-    const filteredModels = mockModels.filter((model) => {
+    const filteredModels = models.filter((model) => {
         const matchesSearch =
             model.model_name
                 .toLowerCase()

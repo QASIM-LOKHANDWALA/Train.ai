@@ -7,9 +7,15 @@ import {
     LuDatabase,
     LuGrid3X3,
 } from "react-icons/lu";
+import { useAuth } from "../hooks/useAuth";
 
 const ModelCard = ({ model }) => {
-    const [isLiked, setIsLiked] = useState(false);
+    const { user } = useAuth();
+    const [isLiked, setIsLiked] = useState(
+        user.liked_models.includes(model.id)
+    );
+
+    const handleLike = () => {};
 
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString("en-US", {
@@ -51,7 +57,7 @@ const ModelCard = ({ model }) => {
                 </div>
 
                 <button
-                    onClick={() => setIsLiked(!isLiked)}
+                    onClick={handleLike}
                     className="p-2 rounded-full bg-gray-700 hover:bg-gray-600 transition-colors group-hover:scale-110"
                 >
                     <LuHeart
