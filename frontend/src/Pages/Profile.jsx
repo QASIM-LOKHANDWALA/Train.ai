@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
     LuUser,
     LuMail,
@@ -22,13 +23,18 @@ const Profile = () => {
     const [userDetails, setUserDetails] = useState(user);
 
     const [trainedModels, setTrainedModels] = useState([]);
-    const { getTrainedModels } = useProfile();
+    const [likedModels, setLikedModels] = useState([]);
+    const { getTrainedModels, getLikedModels } = useProfile();
 
     useEffect(() => {
         const fetchModels = async () => {
-            const data = await getTrainedModels();
-            if (data) {
-                setTrainedModels(data);
+            const trainedModelData = await getTrainedModels();
+            const likedModelData = await getLikedModels(user.id);
+            if (trainedModelData) {
+                setTrainedModels(trainedModelData);
+            }
+            if (likedModelData) {
+                setLikedModels(likedModelData);
             }
         };
         fetchModels();
@@ -76,34 +82,34 @@ const Profile = () => {
     //     },
     // ];
 
-    const likedModels = [
-        {
-            id: "a123bc45-ef67-89gh-ijkl-mnop12345678",
-            user_id: "other_user_id",
-            model_name: "Stock Market Predictor",
-            model_type: "KNN",
-            target_column: "stock_price",
-            features: "volume,ma_50,ma_200,rsi",
-            model_file:
-                "/media/models/a123bc45-ef67-89gh-ijkl-mnop12345678_model.pkl",
-            created_at: "2025-05-20T16:45:30.123456Z",
-            is_public: true,
-            likes: 24,
-        },
-        {
-            id: "e456fg78-hi90-jklm-nopq-rst123456789",
-            user_id: "another_user_id",
-            model_name: "Weather Forecast Model",
-            model_type: "PolynomialRegression",
-            target_column: "temperature",
-            features: "humidity,pressure,wind_speed,season",
-            model_file:
-                "/media/models/e456fg78-hi90-jklm-nopq-rst123456789_model.pkl",
-            created_at: "2025-05-18T11:30:45.987654Z",
-            is_public: true,
-            likes: 18,
-        },
-    ];
+    // const likedModels = [
+    //     {
+    //         id: "a123bc45-ef67-89gh-ijkl-mnop12345678",
+    //         user_id: "other_user_id",
+    //         model_name: "Stock Market Predictor",
+    //         model_type: "KNN",
+    //         target_column: "stock_price",
+    //         features: "volume,ma_50,ma_200,rsi",
+    //         model_file:
+    //             "/media/models/a123bc45-ef67-89gh-ijkl-mnop12345678_model.pkl",
+    //         created_at: "2025-05-20T16:45:30.123456Z",
+    //         is_public: true,
+    //         likes: 24,
+    //     },
+    //     {
+    //         id: "e456fg78-hi90-jklm-nopq-rst123456789",
+    //         user_id: "another_user_id",
+    //         model_name: "Weather Forecast Model",
+    //         model_type: "PolynomialRegression",
+    //         target_column: "temperature",
+    //         features: "humidity,pressure,wind_speed,season",
+    //         model_file:
+    //             "/media/models/e456fg78-hi90-jklm-nopq-rst123456789_model.pkl",
+    //         created_at: "2025-05-18T11:30:45.987654Z",
+    //         is_public: true,
+    //         likes: 18,
+    //     },
+    // ];
 
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString("en-US", {
@@ -365,9 +371,12 @@ const Profile = () => {
                                         Explore the community and like models
                                         you find interesting!
                                     </p>
-                                    <button className="px-6 py-3 bg-gradient-to-r from-dark-orange-500 to-goldenrod-500 text-rich-black-400 rounded-full font-bold hover:shadow-lg hover:shadow-dark-orange-500/30 transition-all duration-200">
+                                    <Link
+                                        to="/home"
+                                        className="px-6 py-3 bg-gradient-to-r from-dark-orange-500 to-goldenrod-500 text-rich-black-400 rounded-full font-bold hover:shadow-lg hover:shadow-dark-orange-500/30 transition-all duration-200"
+                                    >
                                         Explore Models
-                                    </button>
+                                    </Link>
                                 </div>
                             )}
                         </div>

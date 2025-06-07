@@ -25,7 +25,32 @@ export const useProfile = () => {
         }
     };
 
+    const getLikedModels = async (userId) => {
+        try {
+            const token = localStorage.getItem("token");
+            const response = await axios.get(
+                `http://127.0.0.1:8000/api/v1/trained-model/user/liked-models/${userId}`,
+                {
+                    withCredentials: true,
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            console.log(response);
+
+            if (response.status === 200) {
+                return response.data;
+            }
+        } catch (error) {
+            console.log(`Error Fetching Liked Models: ${error.message}`);
+        }
+    };
+
     return {
         getTrainedModels,
+        getLikedModels,
     };
 };

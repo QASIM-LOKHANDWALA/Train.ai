@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view
 from django.http import Http404
 
 from .models import TrainedModel
@@ -98,3 +99,9 @@ class ModelUpdateView(APIView):
         trained_model.save()
         serializer = TrainedModelSerializer(trained_model)
         return Response(serializer.data, status=status.HTTP_200_OK)
+  
+@api_view(['GET'])
+def getUserLikedModels(request, pk):
+    liked_models = TrainedModel.objects.filter(user_id=pk)
+    serializer = TrainedModelSerializer(liked_models, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
