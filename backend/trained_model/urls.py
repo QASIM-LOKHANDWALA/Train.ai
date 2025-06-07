@@ -6,5 +6,5 @@ urlpatterns = [
     path('', views.ModelListView.as_view(), name='model_list'),
     path('user/', views.UserTrainedModelView.as_view(), name='user_trained_models'),
     path('update-model/<str:pk>/', views.ModelUpdateView.as_view(), name='update_model'),
-    path('user/liked-models/<str:pk>', views.getUserLikedModels, name='user_liked_models')
+    path('user/liked-models/', views.getUserLikedModels, name='user_liked_models')
 ]

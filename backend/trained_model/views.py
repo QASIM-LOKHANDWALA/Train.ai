@@ -1,10 +1,12 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view
 from django.http import Http404
+
+import json
 
 from .models import TrainedModel
 from .serializer import TrainedModelSerializer
@@ -100,8 +102,19 @@ class ModelUpdateView(APIView):
         serializer = TrainedModelSerializer(trained_model)
         return Response(serializer.data, status=status.HTTP_200_OK)
   
-@api_view(['GET'])
-def getUserLikedModels(request, pk):
-    liked_models = TrainedModel.objects.filter(user_id=pk)
-    serializer = TrainedModelSerializer(liked_models, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def getUserLikedModels(request):
+    try:
+        data = json.loads(request.body)
+        model_ids = data.get('models', [])
+
+        if not isinstance(model_ids, list):
+            return Response({"error": "'models' must be a list of IDs."}, status=status.HTTP_400_BAD_REQUEST)
+
+        liked_models = TrainedModel.objects.filter(id__in=model_ids)
+        serializer = TrainedModelSerializer(liked_models, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    except json.JSONDecodeError:
+        return Response({"error": "Invalid JSON format."}, status=status.HTTP_400_BAD_REQUEST)

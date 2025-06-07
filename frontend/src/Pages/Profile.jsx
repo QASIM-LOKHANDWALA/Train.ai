@@ -29,7 +29,7 @@ const Profile = () => {
     useEffect(() => {
         const fetchModels = async () => {
             const trainedModelData = await getTrainedModels();
-            const likedModelData = await getLikedModels(user.id);
+            const likedModelData = await getLikedModels(user.liked_models);
             if (trainedModelData) {
                 setTrainedModels(trainedModelData);
             }
@@ -38,78 +38,7 @@ const Profile = () => {
             }
         };
         fetchModels();
-    }, []);
-
-    // const trainedModels = [
-    //     {
-    //         id: "c728ef22-db96-48bf-a040-012b2da9b0a4",
-    //         user_id: "683862b9f9f761eb136250cd",
-    //         model_name: "House Price Predictor",
-    //         model_type: "PolynomialRegression",
-    //         target_column: "price",
-    //         features: "size,year,location,bedrooms",
-    //         model_file:
-    //             "/media/models/c728ef22-db96-48bf-a040-012b2da9b0a4_model.pkl",
-    //         created_at: "2025-05-30T12:42:58.923142Z",
-    //         is_public: true,
-    //         likes: 12,
-    //     },
-    //     {
-    //         id: "b827df33-cb85-37af-b151-123c3eb0c1b5",
-    //         user_id: "683862b9f9f761eb136250cd",
-    //         model_name: "Sales Forecaster",
-    //         model_type: "LinearRegression",
-    //         target_column: "sales",
-    //         features: "month,marketing_spend,seasonality",
-    //         model_file:
-    //             "/media/models/b827df33-cb85-37af-b151-123c3eb0c1b5_model.pkl",
-    //         created_at: "2025-05-28T09:15:23.456789Z",
-    //         is_public: false,
-    //         likes: 8,
-    //     },
-    //     {
-    //         id: "d938fe44-dc96-48bf-c262-234d4fa0d2c6",
-    //         user_id: "683862b9f9f761eb136250cd",
-    //         model_name: "Customer Classifier",
-    //         model_type: "DecisionTree",
-    //         target_column: "customer_type",
-    //         features: "age,income,purchase_history,location",
-    //         model_file:
-    //             "/media/models/d938fe44-dc96-48bf-c262-234d4fa0d2c6_model.pkl",
-    //         created_at: "2025-05-25T14:20:15.789012Z",
-    //         is_public: true,
-    //         likes: 15,
-    //     },
-    // ];
-
-    // const likedModels = [
-    //     {
-    //         id: "a123bc45-ef67-89gh-ijkl-mnop12345678",
-    //         user_id: "other_user_id",
-    //         model_name: "Stock Market Predictor",
-    //         model_type: "KNN",
-    //         target_column: "stock_price",
-    //         features: "volume,ma_50,ma_200,rsi",
-    //         model_file:
-    //             "/media/models/a123bc45-ef67-89gh-ijkl-mnop12345678_model.pkl",
-    //         created_at: "2025-05-20T16:45:30.123456Z",
-    //         is_public: true,
-    //         likes: 24,
-    //     },
-    //     {
-    //         id: "e456fg78-hi90-jklm-nopq-rst123456789",
-    //         user_id: "another_user_id",
-    //         model_name: "Weather Forecast Model",
-    //         model_type: "PolynomialRegression",
-    //         target_column: "temperature",
-    //         features: "humidity,pressure,wind_speed,season",
-    //         model_file:
-    //             "/media/models/e456fg78-hi90-jklm-nopq-rst123456789_model.pkl",
-    //         created_at: "2025-05-18T11:30:45.987654Z",
-    //         is_public: true,
-    //         likes: 18,
-    //     },
-    // ];
+    }, [user]);
 
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString("en-US", {

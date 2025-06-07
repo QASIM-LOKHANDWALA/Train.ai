@@ -25,7 +25,11 @@ class LinearRegressionView(APIView):
         data = request.data
         model_name = data.get('model_name', 'Linear Regression')
         target_col = data.get('target_col')
+        
+        if 'csv_file' not in request.FILES:
+            return Response({"error": "CSV file is missing."}, status=status.HTTP_400_BAD_REQUEST)
         csv_file = request.FILES['csv_file']
+        
         df = pd.read_csv(csv_file)
         
         if target_col not in df.columns:

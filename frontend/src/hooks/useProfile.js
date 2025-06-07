@@ -25,11 +25,14 @@ export const useProfile = () => {
         }
     };
 
-    const getLikedModels = async (userId) => {
+    const getLikedModels = async (likedModelIds) => {
         try {
             const token = localStorage.getItem("token");
-            const response = await axios.get(
-                `http://127.0.0.1:8000/api/v1/trained-model/user/liked-models/${userId}`,
+            const response = await axios.post(
+                `http://127.0.0.1:8000/api/v1/trained-model/user/liked-models/`,
+                {
+                    models: likedModelIds,
+                },
                 {
                     withCredentials: true,
                     headers: {
