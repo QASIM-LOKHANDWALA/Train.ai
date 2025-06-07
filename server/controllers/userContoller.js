@@ -88,6 +88,7 @@ export const updateLikedModel = async (req, res) => {
             message: `Model ${
                 state === "like" ? "added to" : "removed from"
             } liked models.`,
+            user,
             success: true,
         });
     } catch (error) {

@@ -8,34 +8,18 @@ import {
     LuGrid3X3,
 } from "react-icons/lu";
 import { useAuth } from "../hooks/useAuth";
-import axios from "axios";
 
 const ModelCard = ({ model }) => {
-    const { user } = useAuth();
+    const { user, updateLike } = useAuth();
     const [isLiked, setIsLiked] = useState(
         user.liked_models.includes(model.id)
     );
 
     const handleLike = async () => {
         try {
-            const token = localStorage.getItem("token");
-            console.log(token);
-
-            const response = await axios.get(
-                `http://127.0.0.1:5050/api/v1/user/update-liked-model/${model.id}`,
-                {
-                    withCredentials: true,
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-            console.log(response);
-
-            if (response.data.success) {
-                console.log("Like Updated");
-            }
+            await updateLike(model.id).unwrap();
+            alert("Model Like Updated");
+            setIsLiked((prev) => !prev);
         } catch (error) {
             console.log(`Error In Updating Likes: ${error.message}`);
         }

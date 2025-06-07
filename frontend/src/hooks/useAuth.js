@@ -4,6 +4,7 @@ import {
     signupUser,
     signinUser,
     signoutUser,
+    updateLikedModel,
     clearError,
     logout,
 } from "../features/auth/authSlice";
@@ -34,6 +35,10 @@ export const useAuth = () => {
         dispatch(logout());
     };
 
+    const updateLike = (modelId) => {
+        return dispatch(updateLikedModel(modelId));
+    };
+
     return {
         user,
         token,
@@ -45,5 +50,6 @@ export const useAuth = () => {
         signout,
         clearAuthError,
         logoutUser,
+        updateLike,
     };
 };

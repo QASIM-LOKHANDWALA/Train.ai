@@ -117,6 +117,41 @@ export const signoutUser = createAsyncThunk(
     }
 );
 
+export const updateLikedModel = createAsyncThunk(
+    "user/updateLikedModel",
+    async (modelId, { getState, rejectWithValue }) => {
+        try {
+            const token =
+                getState().auth.token || localStorage.getItem("token");
+
+            const response = await axios.get(
+                `http://127.0.0.1:5050/api/v1/user/update-liked-model/${modelId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        client: "not-browser",
+                    },
+                    withCredentials: true,
+                }
+            );
+
+            const data = response.data;
+
+            if (!data.success) {
+                return rejectWithValue(data.message);
+            }
+
+            return data.user;
+        } catch (error) {
+            return rejectWithValue(
+                error.response?.data?.message ||
+                    error.message ||
+                    "Network error"
+            );
+        }
+    }
+);
+
 export const authSlice = createSlice({
     name: "user",
     initialState,
@@ -175,6 +210,20 @@ export const authSlice = createSlice({
                 state.error = null;
             })
             .addCase(signoutUser.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload;
+            })
+
+            .addCase(updateLikedModel.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(updateLikedModel.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.user = action.payload;
+                state.error = null;
+            })
+            .addCase(updateLikedModel.rejected, (state, action) => {
                 state.isLoading = false;
                 state.error = action.payload;
             });
