@@ -25,7 +25,7 @@ const Home = () => {
             setModels(response.data);
         };
         fetchModels();
-    });
+    }, []);
 
     const mockModels = [
         {

@@ -52,7 +52,7 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex">
+        <div className="h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex">
             <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-orange-500/20 to-yellow-500/20 rounded-full blur-3xl"></div>
             <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-yellow-500/15 to-orange-500/15 rounded-full blur-3xl"></div>
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-orange-500/5 to-yellow-500/5 rounded-full blur-3xl"></div>
