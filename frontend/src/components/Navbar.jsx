@@ -44,9 +44,12 @@ export default function Navbar() {
                     </a>
                 </li>
                 <li>
-                    <a className="hover:text-gray-500/80 transition" href="#">
-                        Portfolio
-                    </a>
+                    <Link
+                        className="hover:text-gray-500/80 transition"
+                        to="/profile"
+                    >
+                        Profile
+                    </Link>
                 </li>
                 <li>
                     <Link

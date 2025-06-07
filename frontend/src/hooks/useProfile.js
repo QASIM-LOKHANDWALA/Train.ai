@@ -1,0 +1,31 @@
+import axios from "axios";
+
+export const useProfile = () => {
+    const getTrainedModels = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            const response = await axios.get(
+                "http://127.0.0.1:8000/api/v1/trained-model/user",
+                {
+                    withCredentials: true,
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            console.log(response);
+
+            if (response.status === 200) {
+                return response.data;
+            }
+        } catch (error) {
+            console.log(`Error Fetching Trained Models: ${error.message}`);
+        }
+    };
+
+    return {
+        getTrainedModels,
+    };
+};

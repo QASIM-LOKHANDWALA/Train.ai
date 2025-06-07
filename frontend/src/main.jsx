@@ -10,6 +10,7 @@ import Home from "./pages/Home.jsx";
 import LandingPage from "./pages/LandingPage.jsx";
 import Pricing from "./components/Pricing.jsx";
 import PageNotFound from "./pages/PageNotFound.jsx";
+import Profile from "./pages/Profile.jsx";
 
 function ProtectedRoute({ children }) {
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -49,6 +50,14 @@ const router = createBrowserRouter([
                 element: (
                     <ProtectedRoute>
                         <Pricing />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "profile",
+                element: (
+                    <ProtectedRoute>
+                        <Profile />
                     </ProtectedRoute>
                 ),
             },
