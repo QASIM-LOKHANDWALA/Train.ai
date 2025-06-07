@@ -10,6 +10,7 @@ import {
     LuSparkles,
     LuChevronRight,
 } from "react-icons/lu";
+import toast, { Toaster } from "react-hot-toast";
 
 const Login = () => {
     const [login, setLogin] = useState(true);
@@ -39,11 +40,11 @@ const Login = () => {
         try {
             if (!login) {
                 await signup({ email, password, full_name: name }).unwrap();
-                alert("Account created successfully!");
+                toast.success("Account created successfully!");
                 setLogin(true);
             } else {
                 await signin({ email, password }).unwrap();
-                alert("Logged in successfully!");
+                toast.success("Logged in successfully!");
                 navigate("/home");
             }
         } catch (err) {
@@ -234,6 +235,7 @@ const Login = () => {
                     </div>
                 </div>
             </div>
+            <Toaster />
         </div>
     );
 };

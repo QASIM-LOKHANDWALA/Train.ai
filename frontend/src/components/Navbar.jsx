@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import toast from "react-hot-toast";
 
 export default function Navbar() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -11,6 +12,7 @@ export default function Navbar() {
     const handleSignout = async () => {
         try {
             await signout().unwrap();
+            toast.success("Logged out successfully!");
             navigate("/auth");
         } catch (error) {
             console.log(`Error signing out: ${error.message}`);

@@ -8,18 +8,20 @@ import {
     LuGrid3X3,
 } from "react-icons/lu";
 import { useAuth } from "../hooks/useAuth";
+import toast from "react-hot-toast";
 
 const ModelCard = ({ model }) => {
     const { user, updateLike } = useAuth();
     const [isLiked, setIsLiked] = useState(
         user.liked_models.includes(model.id)
     );
+    const [modelLikes, setModelLikes] = useState(model.likes);
 
     const handleLike = async () => {
         try {
             await updateLike(model.id).unwrap();
-            alert("Model Like Updated");
             setIsLiked((prev) => !prev);
+            setModelLikes(isLiked ? modelLikes - 1 : modelLikes + 1);
         } catch (error) {
             console.log(`Error In Updating Likes: ${error.message}`);
         }
@@ -112,7 +114,7 @@ const ModelCard = ({ model }) => {
                 <div className="flex items-center space-x-3">
                     <div className="flex items-center text-sm text-gray-400">
                         <LuHeart className="w-4 h-4 mr-1" />
-                        {model.likes}
+                        {modelLikes}
                     </div>
 
                     <button className="flex items-center px-3 py-1 bg-gradient-to-r from-orange-500 to-yellow-500 text-gray-900 text-sm font-medium rounded-full hover:shadow-lg hover:shadow-orange-500/30 transition-all duration-200">
