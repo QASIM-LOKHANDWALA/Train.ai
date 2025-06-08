@@ -14,14 +14,6 @@ export const trainModel = async (req, res) => {
             });
         }
 
-        if (!currUser.premium_user) {
-            currUser.limit -= 1;
-            await currUser.save();
-        }
-
-        console.log("Text fields:", req.body);
-        console.log("Uploaded file:", req.file);
-
         const formData = new FormData();
         formData.append("model_name", req.body["model_name"]);
         formData.append("target_col", req.body["target_col"]);
@@ -47,7 +39,15 @@ export const trainModel = async (req, res) => {
                 },
             }
         );
-        req.user = currUser;
+
+        if (response.status == 200) {
+            if (!currUser.premium_user) {
+                currUser.limit -= 1;
+                await currUser.save();
+            }
+            req.user = currUser;
+        }
+
         return res.status(200).json({
             message: "Model training completed.",
             success: true,
