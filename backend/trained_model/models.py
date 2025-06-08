@@ -30,3 +30,30 @@ class TrainedModel(models.Model):
 
     def __str__(self):
         return f"{self.model_type} | Target: {self.target_column}"
+    
+class ModelStats(models.Model):
+    trained_model = models.OneToOneField(TrainedModel, on_delete=models.CASCADE, related_name='stats')
+
+    # Regression metrics
+    r2_score = models.FloatField(null=True, blank=True)
+    mse = models.FloatField(null=True, blank=True)
+    mae = models.FloatField(null=True, blank=True)
+
+    # Classification metrics
+    accuracy = models.FloatField(null=True, blank=True)
+    precision = models.FloatField(null=True, blank=True)
+    recall = models.FloatField(null=True, blank=True)
+    f1_score = models.FloatField(null=True, blank=True)
+
+    def __str__(self):
+        return f"Stats for {self.trained_model.model_name}"
+
+class ModelGraph(models.Model):
+    trained_model = models.ForeignKey(TrainedModel, on_delete=models.CASCADE, related_name='graphs')
+    title = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
+    graph_image = models.ImageField(upload_to='graphs/', null=True, blank=True)
+    graph_json = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return f"Graph: {self.title} for {self.trained_model.model_name}"
