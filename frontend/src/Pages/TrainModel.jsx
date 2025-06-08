@@ -13,6 +13,8 @@ import {
     LuCircleAlert,
     LuX,
 } from "react-icons/lu";
+import Papa from "papaparse";
+import { useTrain } from "../hooks/useTrain";
 
 const TrainModel = () => {
     const [selectedModel, setSelectedModel] = useState("");
@@ -23,6 +25,8 @@ const TrainModel = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isTraining, setIsTraining] = useState(false);
     const [csvColumns, setCsvColumns] = useState([]);
+
+    const { trainModel } = useTrain();
 
     const modelTypes = [
         {
@@ -65,33 +69,27 @@ const TrainModel = () => {
 
     const handleFileUpload = (event) => {
         const file = event.target.files[0];
+
         if (file && file.type === "text/csv") {
             setCsvFile(file);
 
-            console.log("here");
-
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const text = e.target.result;
-                console.log(text);
-
-                const lines = text.split("\n");
-                if (lines.length > 0) {
-                    console.log(lines[0]);
-
-                    const headers = lines[0]
-                        .split(",")
-                        .map((header) => header.trim());
-                    console.log("CSV Column Names:", headers);
-                    setCsvColumns(headers);
-                }
-            };
-
-            reader.readAsText(file);
+            Papa.parse(file, {
+                header: true,
+                skipEmptyLines: true,
+                complete: (results) => {
+                    const columns = Object.keys(results.data[0]);
+                    console.log("CSV Column Names:", columns);
+                    setCsvColumns(columns);
+                    console.log("First Row Example:", results.data[0]);
+                },
+                error: (err) => {
+                    console.error("Error parsing CSV:", err.message);
+                },
+            });
         }
     };
 
-    const handleTrainModel = () => {
+    const handleTrainModel = async () => {
         if (!selectedModel || !modelName || !csvFile || !targetColumn) {
             return;
         }
@@ -99,10 +97,9 @@ const TrainModel = () => {
         setIsTraining(true);
         console.log(modelName, selectedModel, targetColumn, route);
 
-        setTimeout(() => {
-            setIsTraining(false);
-            alert("Model training completed successfully!");
-        }, 3000);
+        const data = await trainModel(modelName, targetColumn, csvFile, route);
+        console.log(data);
+        setIsTraining(false);
     };
 
     const isFormValid =

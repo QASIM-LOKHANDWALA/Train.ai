@@ -8,6 +8,6 @@ const upload = multer({ storage });
 
 const router = express.Router();
 
-router.post("/train", upload.single("csv_file"), identifier, trainModel);
+router.post("/train", identifier, upload.single("csv_file"), trainModel);
 
 export default router;

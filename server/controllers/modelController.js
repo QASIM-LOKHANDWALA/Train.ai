@@ -22,12 +22,9 @@ export const trainModel = async (req, res) => {
             contentType: req.file.mimetype,
         });
 
-        let token;
-        if (req.headers.client === "not-browser") {
-            token = req.headers.authorization;
-        } else {
-            token = req.cookies["Authorization"];
-        }
+        const token = req.headers.authorization;
+        console.log("Forwarding token:", token);
+
 
         const response = await axios.post(
             `http://localhost:8000/api/v1/${req.body.endpoint}/`,
@@ -35,7 +32,7 @@ export const trainModel = async (req, res) => {
             {
                 headers: {
                     ...formData.getHeaders(),
-                    Authorization: token,
+                    Authorization: `Bearer ${token.replace(/^Bearer\s+/i, "")}`,
                 },
             }
         );
