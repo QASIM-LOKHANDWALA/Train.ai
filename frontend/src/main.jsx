@@ -11,6 +11,7 @@ import LandingPage from "./pages/LandingPage.jsx";
 import Pricing from "./components/Pricing.jsx";
 import PageNotFound from "./pages/PageNotFound.jsx";
 import Profile from "./pages/Profile.jsx";
+import TrainModel from "./pages/TrainModel.jsx";
 
 function ProtectedRoute({ children }) {
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -58,6 +59,14 @@ const router = createBrowserRouter([
                 element: (
                     <ProtectedRoute>
                         <Profile />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "train",
+                element: (
+                    <ProtectedRoute>
+                        <TrainModel />
                     </ProtectedRoute>
                 ),
             },
