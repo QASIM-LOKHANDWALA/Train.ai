@@ -7,13 +7,12 @@ from rest_framework.decorators import api_view
 from django.http import Http404
 
 import json
-
-from .models import TrainedModel
-from .serializer import TrainedModelSerializer
-
 import joblib
 from sklearn.preprocessing import PolynomialFeatures
 import numpy as np
+
+from .models import TrainedModel
+from .serializer import TrainedModelSerializer, ModelStatsSerializer, ModelGraphSerializer
 
 class UserTrainedModelView(APIView):
     
@@ -44,8 +43,37 @@ class ModelDetailView(APIView):
         
     def get(self, request, pk):
         trained_model = self.get_object(pk)
-        serializer = TrainedModelSerializer(trained_model)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        model_coefficients = None
+        model_intercept = None
+        
+        try:
+            model_file = trained_model.model_file.path
+            model = joblib.load(model_file)
+            
+            model_coefficients = model.coef_.tolist() if hasattr(model, "coef_") else None
+            model_intercept = model.intercept_.tolist() if hasattr(model, "intercept_") else None
+        except Exception as e:
+            pass
+        
+        return Response({
+            "message": "Model data retrieved successfully.",
+            "model": {
+                "id": str(trained_model.id),
+                "name": trained_model.model_name,
+                "type": trained_model.model_type,
+                "polynomial_degree": trained_model.polynomial_degree,
+                "target_column": trained_model.target_column,
+                "features": trained_model.features,
+                "is_public": trained_model.is_public,
+                "likes": trained_model.likes,
+                "created_at": trained_model.created_at,
+            },
+            "metrics": ModelStatsSerializer(trained_model.stats).data if hasattr(trained_model, "stats") else {},
+            "graphs": ModelGraphSerializer(trained_model.graphs.all(), many=True).data,
+            "coefficients": model_coefficients,
+            "intercept": model_intercept,
+        }, status=status.HTTP_200_OK)
     
     def post(self, request, pk):
         trained_model = self.get_object(pk)
