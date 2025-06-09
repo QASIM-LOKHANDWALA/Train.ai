@@ -19,6 +19,10 @@ from trained_model.models import TrainedModel, ModelStats, ModelGraph
 from ml_utils.graph_utils import *
 from ml_utils.stats_utils import *
 
+from sklearn.preprocessing import LabelEncoder
+
+from trained_model.serializer import ModelStatsSerializer, ModelGraphSerializer
+
 class KNeighborsView(APIView):
     
     permission_classes = [IsAuthenticated]
@@ -50,8 +54,16 @@ class KNeighborsView(APIView):
             return Response({"error": "Dataset contains a large number of null values."}, status=status.HTTP_400_BAD_REQUEST)
 
         df = df.dropna()
-        y = df[target_col].astype(int)
+        y_raw = df[target_col]
+        try:
+            y = y_raw.astype(int)
+        except ValueError:
+            le = LabelEncoder()
+            y = le.fit_transform(y_raw)
+
         X = pd.get_dummies(df.drop(columns=[target_col]), drop_first=True)
+                
+        print(X.head())
 
         x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
         best_params, best_score = self.hyperparameter_tuning(x_train, y_train, x_test, y_test)
@@ -128,22 +140,24 @@ class KNeighborsView(APIView):
                 )
 
         return Response({
-            "model_id": str(ml_model.id),
-            "model_name": ml_model.model_name,
-            "model_type": ml_model.model_type,
-            "best_parameters": {
-                "n_neighbors": best_params.get('neighbors')
+            "message": "Model, statistics, and graphs saved successfully.",
+            "model": {
+                "id": str(ml_model.id),
+                "name": ml_model.model_name,
+                "type": ml_model.model_type,
+                "polynomial_degree": ml_model.polynomial_degree,
+                "target_column": ml_model.target_column,
+                "features": ml_model.features,
+                "is_public": ml_model.is_public,
+                "likes": ml_model.likes,
+                "created_at": ml_model.created_at,
             },
-            "metrics": {
-                "accuracy": round(accuracy_score(y_test, y_pred), 4),
-                "precision": round(precision_score(y_test, y_pred, average='macro'), 4),
-                "recall": round(recall_score(y_test, y_pred, average='macro'), 4),
-                "f1_score": round(f1_score(y_test, y_pred, average='macro'), 4)
-            },
-            "graphs_saved": [
-                "Confusion Matrix",
-                "ROC Curve" if y_proba is not None else "Not applicable",
-                "Precision-Recall Curve" if y_proba is not None else "Not applicable"
-            ],
-            "status": "Model, stats, and graphs saved successfully."
+            "metrics": ModelStatsSerializer(ml_model.stats).data if hasattr(ml_model, "stats") else {},
+            "graphs": ModelGraphSerializer(ml_model.graphs.all(), many=True).data,
+            "coefficients": (
+                model.coef_.tolist() if hasattr(model, "coef_") else None
+            ),
+            "intercept": (
+                model.intercept_.tolist() if hasattr(model, "intercept_") else None
+            ),
         }, status=status.HTTP_200_OK)

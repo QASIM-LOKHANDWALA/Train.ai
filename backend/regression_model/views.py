@@ -22,6 +22,7 @@ from ml_utils.graph_utils import (
     save_qq_plot
 )
 from ml_utils.stats_utils import calculate_regression_metrics
+from trained_model.serializer import ModelStatsSerializer, ModelGraphSerializer
 
 class LinearRegressionView(APIView):
     permission_classes = [IsAuthenticated]
@@ -106,13 +107,26 @@ class LinearRegressionView(APIView):
                 )
 
         return Response({
-            "model_id": str(ml_model.id),
-            "model_name": ml_model.model_name,
-            "model_type": ml_model.model_type,
-            "metrics": {k: round(v, 4) for k, v in metrics.items()},
-            "coefficients": model.coef_.tolist(),
-            "intercept": model.intercept_.tolist(),
-            "status": "Model, stats, and graphs saved successfully."
+            "message": "Model, statistics, and graphs saved successfully.",
+            "model": {
+                "id": str(ml_model.id),
+                "name": ml_model.model_name,
+                "type": ml_model.model_type,
+                "polynomial_degree": ml_model.polynomial_degree,
+                "target_column": ml_model.target_column,
+                "features": ml_model.features,
+                "is_public": ml_model.is_public,
+                "likes": ml_model.likes,
+                "created_at": ml_model.created_at,
+            },
+            "metrics": ModelStatsSerializer(ml_model.stats).data if hasattr(ml_model, "stats") else {},
+            "graphs": ModelGraphSerializer(ml_model.graphs.all(), many=True).data,
+            "coefficients": (
+                model.coef_.tolist() if hasattr(model, "coef_") else None
+            ),
+            "intercept": (
+                model.intercept_.tolist() if hasattr(model, "intercept_") else None
+            ),
         }, status=status.HTTP_200_OK)
 
 
@@ -153,6 +167,7 @@ class PolynomialRegressionView(APIView):
 
         for degree in range(1, 10):
             pipeline, metrics = self.polynomial_degree_trainer(degree, x_train, y_train, x_test, y_test)
+            print(metrics)
             if metrics['r2_score'] > best_r2:
                 best_r2 = metrics['r2_score']
                 best_degree = degree
@@ -216,12 +231,24 @@ class PolynomialRegressionView(APIView):
         linear_model = best_pipeline.named_steps['linearregression']
 
         return Response({
-            "model_id": str(ml_model.id),
-            "model_name": ml_model.model_name,
-            "model_type": ml_model.model_type,
-            "best_degree": best_degree,
-            "metrics": {k: round(v, 4) for k, v in best_metrics.items()},
-            "coefficients": linear_model.coef_.tolist(),
-            "intercept": linear_model.intercept_.tolist(),
-            "status": "Model, stats, and graphs saved successfully."
+            "message": "Model, statistics, and graphs saved successfully.",
+            "model": {
+                "id": str(ml_model.id),
+                "name": ml_model.model_name,
+                "type": ml_model.model_type,
+                "polynomial_degree": ml_model.polynomial_degree,
+                "target_column": ml_model.target_column,
+                "features": ml_model.features,
+                "is_public": ml_model.is_public,
+                "likes": ml_model.likes,
+                "created_at": ml_model.created_at,
+            },
+            "metrics": ModelStatsSerializer(ml_model.stats).data if hasattr(ml_model, "stats") else {},
+            "graphs": ModelGraphSerializer(ml_model.graphs.all(), many=True).data,
+            "coefficients": (
+                ml_model.coef_.tolist() if hasattr(ml_model, "coef_") else None
+            ),
+            "intercept": (
+                ml_model.intercept_.tolist() if hasattr(ml_model, "intercept_") else None
+            ),
         }, status=status.HTTP_200_OK)
