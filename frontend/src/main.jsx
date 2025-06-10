@@ -72,7 +72,7 @@ const router = createBrowserRouter([
                 ),
             },
             {
-                path: "model-detail",
+                path: "model-detail/:id",
                 element: (
                     <ProtectedRoute>
                         <ModelDetail />

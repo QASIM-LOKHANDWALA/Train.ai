@@ -9,6 +9,7 @@ import {
 } from "react-icons/lu";
 import { useAuth } from "../hooks/useAuth";
 import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 const ModelCard = ({ model }) => {
     const { user, updateLike } = useAuth();
@@ -117,10 +118,13 @@ const ModelCard = ({ model }) => {
                         {modelLikes}
                     </div>
 
-                    <button className="flex items-center px-3 py-1 bg-gradient-to-r from-orange-500 to-yellow-500 text-gray-900 text-sm font-medium rounded-full hover:shadow-lg hover:shadow-orange-500/30 transition-all duration-200">
+                    <Link
+                        to={`/model-detail/${model.id}`}
+                        className="flex items-center px-3 py-1 bg-gradient-to-r from-orange-500 to-yellow-500 text-gray-900 text-sm font-medium rounded-full hover:shadow-lg hover:shadow-orange-500/30 transition-all duration-200"
+                    >
                         <LuEye className="w-4 h-4 mr-1" />
                         View
-                    </button>
+                    </Link>
                 </div>
             </div>
         </div>
