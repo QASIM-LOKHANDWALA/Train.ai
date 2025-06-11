@@ -38,11 +38,16 @@ export default function Navbar() {
                         Home
                     </Link>
                 </li>
-                <li>
-                    <a className="hover:text-gray-500/80 transition" href="#">
-                        Services
-                    </a>
-                </li>
+                {isAuthenticated && (
+                    <li>
+                        <Link
+                            className="hover:text-gray-500/80 transition"
+                            to="/train"
+                        >
+                            Train
+                        </Link>
+                    </li>
+                )}
                 <li>
                     <Link
                         className="hover:text-gray-500/80 transition"
