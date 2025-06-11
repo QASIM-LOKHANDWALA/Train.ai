@@ -6,6 +6,7 @@ import {
     TrendingUp,
     Eye,
     Heart,
+    Save,
     Play,
     ChevronLeft,
     ChevronRight,
@@ -15,6 +16,7 @@ import {
 } from "lucide-react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const ModelDetail = () => {
     const DJANGO_BASE_URL = "http://localhost:8000";
@@ -222,23 +224,28 @@ const ModelDetail = () => {
                                         </div>
                                         <div>
                                             <h1 className="text-3xl md:text-4xl font-bold text-white">
-                                                {modelData.model.name}
+                                                {modelData.model &&
+                                                    modelData.model.name}
                                             </h1>
                                             <div className="flex items-center gap-4 text-gray-400 text-sm">
                                                 <span className="flex items-center gap-1">
                                                     <Layers className="w-4 h-4" />
-                                                    {modelData.model.model_type}
+                                                    {modelData.model &&
+                                                        modelData.model
+                                                            .model_type}
                                                 </span>
                                                 <span className="flex items-center gap-1">
                                                     <Calendar className="w-4 h-4" />
-                                                    {formatDate(
-                                                        modelData.model
-                                                            .created_at
-                                                    )}
+                                                    {modelData.model &&
+                                                        formatDate(
+                                                            modelData.model
+                                                                .created_at
+                                                        )}
                                                 </span>
                                                 <span className="flex items-center gap-1">
                                                     <Eye className="w-4 h-4" />
-                                                    {modelData.model.is_public
+                                                    {modelData.model &&
+                                                    modelData.model.is_public
                                                         ? "Public"
                                                         : "Private"}
                                                 </span>
@@ -254,7 +261,8 @@ const ModelDetail = () => {
                                         </span>
                                         <span className="px-3 py-1 bg-gradient-to-r from-slate-800 to-slate-900 text-gray-400 rounded-full text-sm border border-slate-700">
                                             Target:{" "}
-                                            {modelData.model.target_column}
+                                            {modelData.model &&
+                                                modelData.model.target_column}
                                         </span>
                                     </div>
                                 </div>
@@ -275,6 +283,18 @@ const ModelDetail = () => {
                                         />
                                         {likeCount}
                                     </button>
+
+                                    <a
+                                        href={
+                                            modelData.model &&
+                                            modelData.model.model_file
+                                        }
+                                        download
+                                        className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-slate-800 to-slate-900 text-gray-400 hover:text-gray-300 border border-slate-700"
+                                    >
+                                        <Save className="w-5 h-5" />
+                                        Download
+                                    </a>
 
                                     <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-gray-900 rounded-xl hover:shadow-lg hover:shadow-orange-500/30 transition-all duration-200">
                                         <Play className="w-5 h-5" />
@@ -297,7 +317,7 @@ const ModelDetail = () => {
                                                 Features Used
                                             </h3>
                                             <div className="flex flex-wrap gap-2">
-                                                {modelData?.model.features &&
+                                                {modelData?.model?.features &&
                                                     modelData.model.features
                                                         .split(",")
                                                         .map(
@@ -335,7 +355,8 @@ const ModelDetail = () => {
                                                 Model ID
                                             </h3>
                                             <p className="text-gray-300 text-sm font-mono bg-gradient-to-r from-gray-800 to-slate-800 p-3 rounded-lg border border-slate-700 break-all">
-                                                {modelData.model.id}
+                                                {modelData.model &&
+                                                    modelData.model.id}
                                             </p>
                                         </div>
                                     </div>
@@ -368,7 +389,8 @@ const ModelDetail = () => {
                                     </button>
                                     <span className="text-gray-400 text-sm">
                                         {currentGraphIndex + 1} /{" "}
-                                        {modelData.graphs.length}
+                                        {modelData.graphs &&
+                                            modelData.graphs.length}
                                     </span>
                                     <button
                                         onClick={nextGraph}

@@ -68,12 +68,14 @@ class ModelDetailView(APIView):
                 "is_public": trained_model.is_public,
                 "likes": trained_model.likes,
                 "created_at": trained_model.created_at,
+                "model_file": trained_model.model_file.url if trained_model.model_file else None,
             },
             "metrics": ModelStatsSerializer(trained_model.stats).data if hasattr(trained_model, "stats") else {},
             "graphs": ModelGraphSerializer(trained_model.graphs.all(), many=True).data,
             "coefficients": model_coefficients,
             "intercept": model_intercept,
         }, status=status.HTTP_200_OK)
+
     
     def post(self, request, pk):
         trained_model = self.get_object(pk)
