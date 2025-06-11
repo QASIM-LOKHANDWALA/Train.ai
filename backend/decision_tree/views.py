@@ -8,6 +8,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, confusion_matrix, recall_score
 import pandas as pd
+import numpy as np
 
 import joblib
 from tempfile import NamedTemporaryFile
@@ -87,21 +88,39 @@ class DecisionTreeView(APIView):
 
         # === Model Stats ===
         y_pred = best_params['model'].predict(x_test)
-        y_proba = best_params['model'].predict_proba(x_test)[:, 1] if hasattr(best_params['model'], 'predict_proba') else None
+        
+        # Check if it's binary or multiclass
+        n_classes = len(np.unique(y))
+        is_binary = n_classes == 2
+        
+        # Get probabilities for ROC/PR curves
+        y_proba = None
+        if hasattr(best_params['model'], 'predict_proba'):
+            y_proba_full = best_params['model'].predict_proba(x_test)
+            if is_binary:
+                y_proba = y_proba_full[:, 1]  # For binary, use positive class probabilities
+            else:
+                y_proba = y_proba_full  # For multiclass, keep all probabilities
+
+        # Calculate metrics appropriate for binary/multiclass
+        if is_binary:
+            avg_method = 'binary'
+        else:
+            avg_method = 'macro'
 
         ModelStats.objects.create(
             trained_model=ml_model,
             accuracy=accuracy_score(y_test, y_pred),
-            precision=precision_score(y_test, y_pred, average='macro'),
-            recall=recall_score(y_test, y_pred, average='macro'),
-            f1_score=f1_score(y_test, y_pred, average='macro'),
+            precision=precision_score(y_test, y_pred, average=avg_method, zero_division=0),
+            recall=recall_score(y_test, y_pred, average=avg_method, zero_division=0),
+            f1_score=f1_score(y_test, y_pred, average=avg_method, zero_division=0),
         )
 
         # === Graphs ===
         graph_dir = 'media/graphs'
         os.makedirs(graph_dir, exist_ok=True)
 
-        # 1. Confusion Matrix
+        # 1. Confusion Matrix (works for both binary and multiclass)
         cm_path = os.path.join(graph_dir, f'cm_{ml_model.id}.png')
         save_confusion_matrix_graph(y_test, y_pred, cm_path)
         with open(cm_path, 'rb') as img_file:
@@ -112,28 +131,50 @@ class DecisionTreeView(APIView):
                 graph_image=ImageFile(img_file, name=os.path.basename(cm_path))
             )
 
-        # 2. ROC Curve
+        # 2. ROC Curve and Precision-Recall Curve
         if y_proba is not None:
-            roc_path = os.path.join(graph_dir, f'roc_{ml_model.id}.png')
-            save_roc_curve_graph(y_test, y_proba, roc_path)
-            with open(roc_path, 'rb') as img_file:
-                ModelGraph.objects.create(
-                    trained_model=ml_model,
-                    title="ROC Curve",
-                    description="Shows model's ability to distinguish classes",
-                    graph_image=ImageFile(img_file, name=os.path.basename(roc_path))
-                )
+            if is_binary:
+                # Binary classification - use existing functions
+                roc_path = os.path.join(graph_dir, f'roc_{ml_model.id}.png')
+                save_roc_curve_graph(y_test, y_proba, roc_path)
+                with open(roc_path, 'rb') as img_file:
+                    ModelGraph.objects.create(
+                        trained_model=ml_model,
+                        title="ROC Curve",
+                        description="Shows model's ability to distinguish classes",
+                        graph_image=ImageFile(img_file, name=os.path.basename(roc_path))
+                    )
 
-            # 3. Precision-Recall Curve
-            pr_path = os.path.join(graph_dir, f'pr_{ml_model.id}.png')
-            save_precision_recall_graph(y_test, y_proba, pr_path)
-            with open(pr_path, 'rb') as img_file:
-                ModelGraph.objects.create(
-                    trained_model=ml_model,
-                    title="Precision-Recall Curve",
-                    description="Shows trade-off between precision and recall",
-                    graph_image=ImageFile(img_file, name=os.path.basename(pr_path))
-                )
+                pr_path = os.path.join(graph_dir, f'pr_{ml_model.id}.png')
+                save_precision_recall_graph(y_test, y_proba, pr_path)
+                with open(pr_path, 'rb') as img_file:
+                    ModelGraph.objects.create(
+                        trained_model=ml_model,
+                        title="Precision-Recall Curve",
+                        description="Shows trade-off between precision and recall",
+                        graph_image=ImageFile(img_file, name=os.path.basename(pr_path))
+                    )
+            else:
+                # Multiclass classification - use multiclass versions
+                roc_path = os.path.join(graph_dir, f'roc_{ml_model.id}.png')
+                save_multiclass_roc_curve_graph(y_test, y_proba, roc_path)
+                with open(roc_path, 'rb') as img_file:
+                    ModelGraph.objects.create(
+                        trained_model=ml_model,
+                        title="ROC Curve (Multiclass)",
+                        description="Shows model's ability to distinguish between multiple classes",
+                        graph_image=ImageFile(img_file, name=os.path.basename(roc_path))
+                    )
+
+                pr_path = os.path.join(graph_dir, f'pr_{ml_model.id}.png')
+                save_multiclass_precision_recall_graph(y_test, y_proba, pr_path)
+                with open(pr_path, 'rb') as img_file:
+                    ModelGraph.objects.create(
+                        trained_model=ml_model,
+                        title="Precision-Recall Curve (Multiclass)",
+                        description="Shows precision-recall trade-off for multiple classes",
+                        graph_image=ImageFile(img_file, name=os.path.basename(pr_path))
+                    )
 
         return Response({
             "message": "Model, statistics, and graphs saved successfully.",

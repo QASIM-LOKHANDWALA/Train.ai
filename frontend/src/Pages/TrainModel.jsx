@@ -15,6 +15,8 @@ import {
 } from "react-icons/lu";
 import Papa from "papaparse";
 import { useTrain } from "../hooks/useTrain";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const TrainModel = () => {
     const [selectedModel, setSelectedModel] = useState("");
@@ -27,6 +29,7 @@ const TrainModel = () => {
     const [csvColumns, setCsvColumns] = useState([]);
 
     const { trainModel } = useTrain();
+    const navigate = useNavigate();
 
     const modelTypes = [
         {
@@ -97,8 +100,20 @@ const TrainModel = () => {
         setIsTraining(true);
         console.log(modelName, selectedModel, targetColumn, route);
 
-        const data = await trainModel(modelName, targetColumn, csvFile, route);
-        console.log(data);
+        const response = await trainModel(
+            modelName,
+            targetColumn,
+            csvFile,
+            route
+        );
+        console.log(response);
+
+        if (response.success) {
+            navigate(`/model-detail/${response.data.model.id}`);
+        } else {
+            toast.error("An Error occured!");
+        }
+
         setIsTraining(false);
     };
 
