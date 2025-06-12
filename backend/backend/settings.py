@@ -90,6 +90,11 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False,
         },
+        'trained_model': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
     },
 }
 
