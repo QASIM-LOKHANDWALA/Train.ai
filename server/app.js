@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import authRouter from "./routers/authRouter.js";
 import userRouter from "./routers/userRouter.js";
 import modelRouter from "./routers/modelRouter.js";
+import { errorHandler } from "./controllers/userContoller.js";
 
 const corsOptions = {
     origin: "http://localhost:5173",
@@ -18,6 +19,7 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(errorHandler);
 
 mongoose
     .connect(process.env.MONGO_URI)
