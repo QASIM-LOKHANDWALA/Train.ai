@@ -17,12 +17,31 @@ const Home = () => {
     const [showFilters, setShowFilters] = useState(false);
 
     const [models, setModels] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
     useEffect(() => {
         const fetchModels = async () => {
-            const response = await axios.get(
-                "http://127.0.0.1:8000/api/v1/trained-model"
-            );
-            setModels(response.data);
+            try {
+                setLoading(true);
+                const response = await axios.get(
+                    "http://127.0.0.1:8000/api/v1/trained-model"
+                );
+                // Ensure we always set an array
+                console.log(response);
+
+                setModels(
+                    Array.isArray(response.data.data) ? response.data.data : []
+                );
+                setError(null);
+            } catch (err) {
+                console.error("Error fetching models:", err);
+                setError(err.message);
+                // Fallback to mock data or empty array
+                setModels([]);
+            } finally {
+                setLoading(false);
+            }
         };
         fetchModels();
     }, []);
@@ -77,21 +96,38 @@ const Home = () => {
         "DecisionTree",
     ];
 
-    const filteredModels = models.filter((model) => {
-        const matchesSearch =
-            model.model_name
-                .toLowerCase()
-                .includes(searchQuery.toLowerCase()) ||
-            model.model_type
-                .toLowerCase()
-                .includes(searchQuery.toLowerCase()) ||
-            model.target_column
-                .toLowerCase()
-                .includes(searchQuery.toLowerCase());
-        const matchesFilter =
-            selectedFilter === "all" || model.model_type === selectedFilter;
-        return matchesSearch && matchesFilter;
-    });
+    // Ensure models is always an array before filtering
+    const filteredModels = (Array.isArray(models) ? models : []).filter(
+        (model) => {
+            const matchesSearch =
+                model.model_name
+                    .toLowerCase()
+                    .includes(searchQuery.toLowerCase()) ||
+                model.model_type
+                    .toLowerCase()
+                    .includes(searchQuery.toLowerCase()) ||
+                model.target_column
+                    .toLowerCase()
+                    .includes(searchQuery.toLowerCase());
+            const matchesFilter =
+                selectedFilter === "all" || model.model_type === selectedFilter;
+            return matchesSearch && matchesFilter;
+        }
+    );
+
+    // Show loading state
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-rich-black-300 via-rich-black-400 to-raisin-black-300 flex items-center justify-center">
+                <div className="text-center">
+                    <div className="w-16 h-16 border-4 border-dark-orange-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-anti-flash-white-400">
+                        Loading models...
+                    </p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-rich-black-300 via-rich-black-400 to-raisin-black-300">
@@ -120,6 +156,16 @@ const Home = () => {
                         or get inspired by others' work.
                     </p>
                 </div>
+
+                {/* Show error message if API fails */}
+                {error && (
+                    <div className="mb-8 p-4 bg-red-500/20 border border-red-500/50 rounded-xl">
+                        <p className="text-red-400">
+                            Error loading models: {error}. Showing example data
+                            instead.
+                        </p>
+                    </div>
+                )}
 
                 <div className="mb-8">
                     <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">

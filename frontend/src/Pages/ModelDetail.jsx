@@ -17,6 +17,7 @@ import {
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import TestModelModal from "../components/TestModelModal";
 
 const ModelDetail = () => {
     const DJANGO_BASE_URL = "http://localhost:8000";
@@ -38,6 +39,8 @@ const ModelDetail = () => {
         modelData?.metrics?.r2_score !== null;
 
     const currentGraph = modelData?.graphs?.[currentGraphIndex] || null;
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         const fetchModel = async () => {
@@ -70,6 +73,10 @@ const ModelDetail = () => {
     useEffect(() => {
         console.log(modelData, likeCount, modelData.metrics, modelData.graphs);
     }, [modelData]);
+
+    const handleTestModel = () => {
+        setIsModalOpen(true);
+    };
 
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString("en-US", {
@@ -296,7 +303,10 @@ const ModelDetail = () => {
                                         Download
                                     </a>
 
-                                    <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-gray-900 rounded-xl hover:shadow-lg hover:shadow-orange-500/30 transition-all duration-200">
+                                    <button
+                                        onClick={handleTestModel}
+                                        className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-gray-900 rounded-xl hover:shadow-lg hover:shadow-orange-500/30 transition-all duration-200"
+                                    >
                                         <Play className="w-5 h-5" />
                                         Test Model
                                     </button>
@@ -492,6 +502,12 @@ const ModelDetail = () => {
                             </div>
                         </div>
                     </div>
+
+                    <TestModelModal
+                        isOpen={isModalOpen}
+                        onClose={() => setIsModalOpen(false)}
+                        modelData={modelData}
+                    />
                 </>
             )}
         </div>
