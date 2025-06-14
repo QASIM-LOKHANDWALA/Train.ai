@@ -19,6 +19,7 @@ import { useProfile } from "../hooks/useProfile";
 const Profile = () => {
     const [activeTab, setActiveTab] = useState("trained");
     const { user } = useAuth();
+
     const [isEditing, setIsEditing] = useState(false);
     const [userDetails, setUserDetails] = useState(user);
 
@@ -31,10 +32,10 @@ const Profile = () => {
             const trainedModelData = await getTrainedModels();
             const likedModelData = await getLikedModels(user.liked_models);
             if (trainedModelData) {
-                setTrainedModels(trainedModelData);
+                setTrainedModels(trainedModelData.data);
             }
             if (likedModelData) {
-                setLikedModels(likedModelData);
+                setLikedModels(likedModelData.data);
             }
         };
         fetchModels();

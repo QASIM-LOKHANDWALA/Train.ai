@@ -18,10 +18,14 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import TestModelModal from "../components/TestModelModal";
+import { useAuth } from "../hooks/useAuth";
 
 const ModelDetail = () => {
     const DJANGO_BASE_URL = "http://localhost:8000";
     const { id } = useParams();
+    const { user } = useAuth();
+
+    console.log(user);
 
     const [modelData, setModelData] = useState({});
     const [loading, setLoading] = useState(true);
@@ -60,6 +64,7 @@ const ModelDetail = () => {
                     setModelData(response.data);
                     setLikeCount(response.data.model.likes);
                     setLoading(false);
+                    console.log(response.data);
                 }
             } catch (error) {
                 console.log(`Error fetching model detail: ${error.message}`);
@@ -71,7 +76,8 @@ const ModelDetail = () => {
     }, [id]);
 
     useEffect(() => {
-        console.log(modelData, likeCount, modelData.metrics, modelData.graphs);
+        console.log("model data ", modelData);
+        console.log("user data ", user);
     }, [modelData]);
 
     const handleTestModel = () => {
@@ -275,6 +281,21 @@ const ModelDetail = () => {
                                 </div>
 
                                 <div className="flex items-center gap-4">
+                                    {modelData &&
+                                        modelData.model.user_id ==
+                                            user["_id"] && (
+                                            <button
+                                                onClick={handleLike}
+                                                className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-200`}
+                                            >
+                                                Make{" "}
+                                                {modelData.model &&
+                                                !modelData.model.is_public
+                                                    ? "Public"
+                                                    : "Private"}
+                                            </button>
+                                        )}
+
                                     <button
                                         onClick={handleLike}
                                         className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-200 ${

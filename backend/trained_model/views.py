@@ -96,6 +96,7 @@ class ModelDetailView(APIView):
                 "message": "Model data retrieved successfully.",
                 "model": {
                     "id": str(trained_model.id),
+                    "user_id": str(trained_model.user_id),
                     "name": trained_model.model_name,
                     "type": trained_model.model_type,
                     "polynomial_degree": trained_model.polynomial_degree,
