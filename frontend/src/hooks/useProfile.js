@@ -1,9 +1,11 @@
 import axios from "axios";
+import { useAuth } from "./useAuth";
 
 export const useProfile = () => {
+    const { token } = useAuth();
+
     const getTrainedModels = async () => {
         try {
-            const token = localStorage.getItem("token");
             const response = await axios.get(
                 "http://127.0.0.1:8000/api/v1/trained-model/user",
                 {
@@ -27,7 +29,6 @@ export const useProfile = () => {
 
     const getLikedModels = async (likedModelIds) => {
         try {
-            const token = localStorage.getItem("token");
             const response = await axios.post(
                 `http://127.0.0.1:8000/api/v1/trained-model/user/liked-models/`,
                 {

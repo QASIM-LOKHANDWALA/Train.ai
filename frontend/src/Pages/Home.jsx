@@ -27,7 +27,6 @@ const Home = () => {
                 const response = await axios.get(
                     "http://127.0.0.1:8000/api/v1/trained-model"
                 );
-                // Ensure we always set an array
                 console.log(response);
 
                 setModels(
@@ -37,7 +36,6 @@ const Home = () => {
             } catch (err) {
                 console.error("Error fetching models:", err);
                 setError(err.message);
-                // Fallback to mock data or empty array
                 setModels([]);
             } finally {
                 setLoading(false);
@@ -45,48 +43,6 @@ const Home = () => {
         };
         fetchModels();
     }, []);
-
-    const mockModels = [
-        {
-            id: "c728ef22-db96-48bf-a040-012b2da9b0a4",
-            user_id: "683862b9f9f761eb136250cd",
-            model_name: "House Price Predictor",
-            model_type: "PolynomialRegression",
-            target_column: "price",
-            features: "size,year,location,bedrooms",
-            model_file:
-                "/media/models/c728ef22-db96-48bf-a040-012b2da9b0a4_model.pkl",
-            created_at: "2025-05-30T12:42:58.923142Z",
-            is_public: true,
-            likes: 12,
-        },
-        {
-            id: "d839gf33-ec07-59cg-b151-123c3eb0c1b5",
-            user_id: "794973c0g0g872fc247361de",
-            model_name: "Stock Market Analyzer",
-            model_type: "LinearRegression",
-            target_column: "stock_price",
-            features: "volume,open,high,low",
-            model_file:
-                "/media/models/d839gf33-ec07-59cg-b151-123c3eb0c1b5_model.pkl",
-            created_at: "2025-05-29T09:15:23.445678Z",
-            is_public: true,
-            likes: 8,
-        },
-        {
-            id: "e940hg44-fd18-60dh-c262-234d4fc1d2c6",
-            user_id: "805084d1h1h983gd358472ef",
-            model_name: "Sales Forecaster",
-            model_type: "PolynomialRegression",
-            target_column: "sales",
-            features: "season,marketing_spend,competition",
-            model_file:
-                "/media/models/e940hg44-fd18-60dh-c262-234d4fc1d2c6_model.pkl",
-            created_at: "2025-05-28T16:30:45.789012Z",
-            is_public: true,
-            likes: 15,
-        },
-    ];
 
     const modelTypes = [
         "all",
@@ -96,7 +52,6 @@ const Home = () => {
         "DecisionTree",
     ];
 
-    // Ensure models is always an array before filtering
     const filteredModels = (Array.isArray(models) ? models : []).filter(
         (model) => {
             const matchesSearch =
@@ -115,7 +70,6 @@ const Home = () => {
         }
     );
 
-    // Show loading state
     if (loading) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-rich-black-300 via-rich-black-400 to-raisin-black-300 flex items-center justify-center">
@@ -157,7 +111,6 @@ const Home = () => {
                     </p>
                 </div>
 
-                {/* Show error message if API fails */}
                 {error && (
                     <div className="mb-8 p-4 bg-red-500/20 border border-red-500/50 rounded-xl">
                         <p className="text-red-400">

@@ -3,16 +3,18 @@ import axios from "axios";
 
 const initialState = {
     user: null,
-    token: localStorage.getItem("token") || null,
+    token: null,
     isLoading: false,
     error: null,
     isAuthenticated: false,
+    _persist: undefined,
 };
 
 export const signupUser = createAsyncThunk(
     "auth/signup",
     async ({ email, password, full_name }, { rejectWithValue }) => {
         try {
+            console.log("Attempting signup with:", { email });
             const response = await axios.post(
                 "http://127.0.0.1:5050/api/v1/auth/signup",
                 { email, password, full_name },
@@ -59,21 +61,19 @@ export const signinUser = createAsyncThunk(
             );
 
             const data = response.data;
-            console.log("Response data:", data);
+            console.log("Signin response:", data);
 
             if (!data.success) {
                 return rejectWithValue(data.message);
             }
 
-            if (data.token) {
-                localStorage.setItem("token", data.token);
-                console.log("Token stored successfully");
-            }
-
-            console.log("Signin successful:", data);
-            return data;
+            const result = {
+                user: data.user,
+                token: data.token,
+                success: data.success,
+            };
+            return result;
         } catch (error) {
-            console.error("Signin error:", error);
             if (error.response && error.response.data) {
                 return rejectWithValue(
                     error.response.data.message || "Server error"
@@ -88,8 +88,7 @@ export const signoutUser = createAsyncThunk(
     "auth/signout",
     async (_, { rejectWithValue, getState }) => {
         try {
-            const token =
-                getState().auth.token || localStorage.getItem("token");
+            const token = getState().auth.token;
 
             const response = await fetch(
                 "http://127.0.0.1:5050/api/v1/auth/signout",
@@ -108,8 +107,6 @@ export const signoutUser = createAsyncThunk(
                 return rejectWithValue(data.message);
             }
 
-            localStorage.removeItem("token");
-
             return data;
         } catch (error) {
             return rejectWithValue(error.message);
@@ -118,11 +115,10 @@ export const signoutUser = createAsyncThunk(
 );
 
 export const updateLikedModel = createAsyncThunk(
-    "user/updateLikedModel",
+    "auth/updateLikedModel",
     async (modelId, { getState, rejectWithValue }) => {
         try {
-            const token =
-                getState().auth.token || localStorage.getItem("token");
+            const token = getState().auth.token;
 
             const response = await axios.get(
                 `http://127.0.0.1:5050/api/v1/user/update-liked-model/${modelId}`,
@@ -153,7 +149,7 @@ export const updateLikedModel = createAsyncThunk(
 );
 
 export const authSlice = createSlice({
-    name: "user",
+    name: "auth",
     initialState,
     reducers: {
         clearError: (state) => {
@@ -163,7 +159,12 @@ export const authSlice = createSlice({
             state.user = null;
             state.token = null;
             state.isAuthenticated = false;
-            localStorage.removeItem("token");
+            state.error = null;
+        },
+        setTestAuth: (state) => {
+            state.user = { email: "test@example.com", id: "123" };
+            state.token = "test-token-123";
+            state.isAuthenticated = true;
         },
     },
     extraReducers: (builder) => {
@@ -173,8 +174,11 @@ export const authSlice = createSlice({
                 state.error = null;
             })
             .addCase(signupUser.fulfilled, (state, action) => {
+                console.log("Signup fulfilled:", action.payload);
                 state.isLoading = false;
                 state.user = action.payload.user;
+                state.token = action.payload.token;
+                state.isAuthenticated = true;
                 state.error = null;
             })
             .addCase(signupUser.rejected, (state, action) => {
@@ -183,17 +187,25 @@ export const authSlice = createSlice({
             })
 
             .addCase(signinUser.pending, (state) => {
+                console.log("Signin pending");
                 state.isLoading = true;
                 state.error = null;
             })
             .addCase(signinUser.fulfilled, (state, action) => {
+                console.log("Signin fulfilled with payload:", action.payload);
                 state.isLoading = false;
                 state.user = action.payload.user;
                 state.token = action.payload.token;
                 state.isAuthenticated = true;
                 state.error = null;
+                console.log("New auth state:", {
+                    user: state.user,
+                    token: state.token,
+                    isAuthenticated: state.isAuthenticated,
+                });
             })
             .addCase(signinUser.rejected, (state, action) => {
+                console.log("Signin rejected:", action.payload);
                 state.isLoading = false;
                 state.error = action.payload;
                 state.isAuthenticated = false;
@@ -203,6 +215,7 @@ export const authSlice = createSlice({
                 state.isLoading = true;
             })
             .addCase(signoutUser.fulfilled, (state) => {
+                console.log("Signout fulfilled");
                 state.isLoading = false;
                 state.user = null;
                 state.token = null;
@@ -230,5 +243,5 @@ export const authSlice = createSlice({
     },
 });
 
-export const { clearError, logout } = authSlice.actions;
+export const { clearError, logout, setTestAuth } = authSlice.actions;
 export default authSlice.reducer;

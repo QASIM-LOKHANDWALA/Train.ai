@@ -23,7 +23,7 @@ import { useAuth } from "../hooks/useAuth";
 const ModelDetail = () => {
     const DJANGO_BASE_URL = "http://localhost:8000";
     const { id } = useParams();
-    const { user } = useAuth();
+    const { user, token } = useAuth();
 
     console.log(user);
 
@@ -55,7 +55,7 @@ const ModelDetail = () => {
                         withCredentials: true,
                         headers: {
                             "Content-Type": "application/json",
-                            Authorization: localStorage.getItem("token"),
+                            Authorization: `Bearer ${token}`,
                         },
                     }
                 );
@@ -286,7 +286,7 @@ const ModelDetail = () => {
                                             user["_id"] && (
                                             <button
                                                 onClick={handleLike}
-                                                className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-200`}
+                                                className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-200 bg-gradient-to-r from-slate-800 to-slate-900 text-gray-400 hover:text-gray-300 border border-slate-700`}
                                             >
                                                 Make{" "}
                                                 {modelData.model &&

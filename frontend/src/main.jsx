@@ -96,9 +96,9 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")).render(
-    <PersistGate persistor={persistor}>
-        <Provider store={store}>
+    <Provider store={store}>
+        <PersistGate persistor={persistor}>
             <RouterProvider router={router} />
-        </Provider>
-    </PersistGate>
+        </PersistGate>
+    </Provider>
 );
