@@ -19,6 +19,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import TestModelModal from "../components/TestModelModal";
 import { useAuth } from "../hooks/useAuth";
+import toast from "react-hot-toast";
 
 const ModelDetail = () => {
     const DJANGO_BASE_URL = "http://localhost:8000";
@@ -121,6 +122,31 @@ const ModelDetail = () => {
 
     const handleImageError = () => {
         setImageError(true);
+    };
+
+    const handlePublicState = async () => {
+        try {
+            const response = await axios.put(
+                `http://127.0.0.1:8000/api/v1/trained-model/detail/${modelData.model.id}/`,
+                {},
+                {
+                    withCredentials: true,
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            if (response.status == 200) {
+                toast.success("Model Public State Updated!");
+                setModelData(response.data);
+            }
+        } catch (error) {
+            console.log(
+                `Error changing public state of model : ${error.message}`
+            );
+        }
     };
 
     const renderClassificationStats = () => (
@@ -285,7 +311,7 @@ const ModelDetail = () => {
                                         modelData.model.user_id ==
                                             user["_id"] && (
                                             <button
-                                                onClick={handleLike}
+                                                onClick={handlePublicState}
                                                 className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-200 bg-gradient-to-r from-slate-800 to-slate-900 text-gray-400 hover:text-gray-300 border border-slate-700`}
                                             >
                                                 Make{" "}

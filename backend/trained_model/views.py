@@ -223,9 +223,42 @@ class ModelDetailView(APIView):
             serializer = TrainedModelSerializer(trained_model, data=data, partial=True)
             if serializer.is_valid():
                 serializer.save()
+                
+                if trained_model.model_file:
+                    try:
+                        model_file_path = trained_model.model_file.path
+                        
+                        if not os.path.exists(model_file_path):
+                            logger.warning(f"Model file not found: {model_file_path}")
+                        else:
+                            model = joblib.load(model_file_path)
+                            model_coefficients = model.coef_.tolist() if hasattr(model, "coef_") else None
+                            model_intercept = model.intercept_.tolist() if hasattr(model, "intercept_") else None
+                            
+                    except (FileNotFoundError, EOFError, ValueError) as e:
+                        logger.error(f"Error loading model file for model {pk}: {str(e)}")
+                    except Exception as e:
+                        logger.error(f"Unexpected error loading model file for model {pk}: {str(e)}")
+                    
                 return Response({
                     "message": f"Model visibility updated to {'public' if data['is_public'] else 'private'}.",
-                    "data": serializer.data
+                    "model": {
+                        "id": str(trained_model.id),
+                        "user_id": str(trained_model.user_id),
+                        "name": trained_model.model_name,
+                        "type": trained_model.model_type,
+                        "polynomial_degree": trained_model.polynomial_degree,
+                        "target_column": trained_model.target_column,
+                        "features": trained_model.features,
+                        "is_public": trained_model.is_public,
+                        "likes": trained_model.likes,
+                        "created_at": trained_model.created_at,
+                        "model_file": trained_model.model_file.url if trained_model.model_file else None,
+                    },
+                    "metrics": ModelStatsSerializer(trained_model.stats).data if hasattr(trained_model, "stats") else {},
+                    "graphs": ModelGraphSerializer(trained_model.graphs.all(), many=True).data,
+                    "coefficients": model_coefficients,
+                    "intercept": model_intercept,
                 }, status=status.HTTP_200_OK)
             else:
                 return Response({
