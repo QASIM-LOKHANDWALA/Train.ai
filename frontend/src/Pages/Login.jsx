@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
     LuMail,
     LuLock,
@@ -11,6 +11,7 @@ import {
     LuChevronRight,
 } from "react-icons/lu";
 import toast, { Toaster } from "react-hot-toast";
+import { Home } from "lucide-react";
 
 const Login = () => {
     const [login, setLogin] = useState(true);
@@ -234,6 +235,12 @@ const Login = () => {
                         </div>
                     </div>
                 </div>
+                <Link
+                    to={"/"}
+                    className="absolute m-4 top-0 right-0 text-sm font-semibold text-goldenrod-500 py-2 px-5 rounded-full border border-gray-600 bg-gray-800"
+                >
+                    <Home />
+                </Link>
             </div>
             <Toaster />
         </div>
