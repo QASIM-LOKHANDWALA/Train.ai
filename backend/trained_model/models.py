@@ -24,6 +24,7 @@ class TrainedModel(models.Model):
     target_column = models.CharField(max_length=100)
     features = models.TextField(null=True, blank=True)
     model_file = models.FileField(upload_to='models/', null=True, blank=True)
+    csv_file = models.FileField(upload_to='data/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_public = models.BooleanField(default=False)
     likes = models.IntegerField(default=0)

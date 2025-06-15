@@ -46,6 +46,7 @@ class TrainedModelSerializer(serializers.ModelSerializer):
             'polynomial_degree',
             'target_column',
             'features',
+            'csv_file',
             'model_file',
             'created_at',
             'is_public',

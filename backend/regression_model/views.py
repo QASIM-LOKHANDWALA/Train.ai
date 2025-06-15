@@ -173,6 +173,7 @@ class LinearRegressionView(APIView):
                         user_id=request.user.id
                     )
                     ml_model.model_file.save(f"{ml_model.id}_model.pkl", django_file)
+                    ml_model.csv_file.save(f"{ml_model.id}_data.csv", csv_file)
                     ml_model.save()
                 # os.remove(temp_file.name)
             except Exception as e:
@@ -418,6 +419,7 @@ class PolynomialRegressionView(APIView):
                         user_id=request.user.id
                     )
                     ml_model.model_file.save(f"{ml_model.id}_model.pkl", django_file)
+                    ml_model.csv_file.save(f"{ml_model.id}_data.csv", csv_file)
                     ml_model.save()
                 # os.remove(temp_file.name)
             except Exception as e:
