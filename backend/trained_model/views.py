@@ -1,9 +1,11 @@
+from datetime import datetime
+from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.core.exceptions import ValidationError
 
 import json
@@ -15,6 +17,7 @@ import os
 
 from .models import TrainedModel
 from .serializer import TrainedModelSerializer, ModelStatsSerializer, ModelGraphSerializer
+from ml_utils.pdf_generator import ModelReportGenerator
 
 logger = logging.getLogger(__name__)
 
@@ -406,3 +409,15 @@ def getUserLikedModels(request):
             "error": "An unexpected error occurred.",
             "message": "Please try again later."
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+def download_model_report(request, model_id):
+    model = get_object_or_404(TrainedModel, id=model_id)
+    
+    generator = ModelReportGenerator(model)
+    pdf_content = generator.generate_report()
+    
+    response = HttpResponse(pdf_content, content_type='application/pdf')
+    filename = f"{model.model_name}_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    
+    return response
