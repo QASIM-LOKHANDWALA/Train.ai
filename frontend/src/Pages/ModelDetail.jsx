@@ -13,6 +13,7 @@ import {
     Target,
     Layers,
     Activity,
+    FileText,
 } from "lucide-react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -146,6 +147,44 @@ const ModelDetail = () => {
             console.log(
                 `Error changing public state of model : ${error.message}`
             );
+        }
+    };
+
+    const handleDownloadReport = async () => {
+        try {
+            const response = await axios.get(
+                `http://127.0.0.1:8000/api/v1/trained-model/report/${id}`,
+                {
+                    responseType: "blob",
+                    withCredentials: true,
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement("a");
+            link.href = url;
+
+            const timestamp = new Date()
+                .toISOString()
+                .replace(/[:.]/g, "-")
+                .slice(0, 19);
+            const filename = `${
+                modelData.model?.name || "Model"
+            }_Report_${timestamp}.pdf`;
+            link.setAttribute("download", filename);
+
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(url);
+
+            toast.success("PDF report downloaded successfully!");
+        } catch (error) {
+            console.error("Error downloading report:", error);
+            toast.error("Failed to download report. Please try again.");
         }
     };
 
@@ -356,6 +395,14 @@ const ModelDetail = () => {
                                     >
                                         <Play className="w-5 h-5" />
                                         Test Model
+                                    </button>
+
+                                    <button
+                                        onClick={handleDownloadReport}
+                                        className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-slate-800 to-slate-900 text-gray-400 hover:text-gray-300 border border-slate-700 rounded-xl transition-all duration-200 hover:border-slate-600"
+                                    >
+                                        <FileText className="w-5 h-5" />
+                                        PDF Report
                                     </button>
                                 </div>
                             </div>
