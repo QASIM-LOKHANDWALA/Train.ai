@@ -137,7 +137,7 @@ export const updateLikedModel = createAsyncThunk(
                 return rejectWithValue(data.message);
             }
 
-            return data.user;
+            return { modelId, state: data.state };
         } catch (error) {
             return rejectWithValue(
                 error.response?.data?.message ||
@@ -233,8 +233,23 @@ export const authSlice = createSlice({
             })
             .addCase(updateLikedModel.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.user = action.payload;
                 state.error = null;
+
+                const { modelId, likeState } = action.payload;
+
+                if (likeState === "like") {
+                    if (!state.user.liked_models.includes(modelId)) {
+                        state.user.liked_models.push(modelId);
+                    }
+                    console.log("===================================");
+                    console.log(state.user);
+                } else if (likeState === "dislike") {
+                    state.user.liked_models = state.user.liked_models.filter(
+                        (id) => id !== modelId
+                    );
+                    console.log("===================================");
+                    console.log(state.user);
+                }
             })
             .addCase(updateLikedModel.rejected, (state, action) => {
                 state.isLoading = false;

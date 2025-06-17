@@ -25,7 +25,7 @@ import toast from "react-hot-toast";
 const ModelDetail = () => {
     const DJANGO_BASE_URL = "http://localhost:8000";
     const { id } = useParams();
-    const { user, token } = useAuth();
+    const { user, token, updateLike } = useAuth();
 
     console.log(user);
 
@@ -102,9 +102,14 @@ const ModelDetail = () => {
         return Number(value).toFixed(4);
     };
 
-    const handleLike = () => {
-        // setIsLiked(!isLiked);
-        // setLikeCount((prev) => (isLiked ? prev - 1 : prev + 1));
+    const handleLike = async () => {
+        try {
+            await updateLike(modelData.model.id).unwrap();
+            setIsLiked((prev) => !prev);
+            setLikeCount((prev) => (isLiked ? prev - 1 : prev + 1));
+        } catch (error) {
+            console.log(`Error In Updating Likes: ${error.message}`);
+        }
     };
 
     const nextGraph = () => {
