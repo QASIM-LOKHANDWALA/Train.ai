@@ -103,8 +103,8 @@ const ModelDetail = () => {
     };
 
     const handleLike = () => {
-        setIsLiked(!isLiked);
-        setLikeCount((prev) => (isLiked ? prev - 1 : prev + 1));
+        // setIsLiked(!isLiked);
+        // setLikeCount((prev) => (isLiked ? prev - 1 : prev + 1));
     };
 
     const nextGraph = () => {
@@ -390,19 +390,19 @@ const ModelDetail = () => {
                                     </a>
 
                                     <button
-                                        onClick={handleTestModel}
-                                        className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-gray-900 rounded-xl hover:shadow-lg hover:shadow-orange-500/30 transition-all duration-200"
-                                    >
-                                        <Play className="w-5 h-5" />
-                                        Test Model
-                                    </button>
-
-                                    <button
                                         onClick={handleDownloadReport}
                                         className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-slate-800 to-slate-900 text-gray-400 hover:text-gray-300 border border-slate-700 rounded-xl transition-all duration-200 hover:border-slate-600"
                                     >
                                         <FileText className="w-5 h-5" />
                                         PDF Report
+                                    </button>
+
+                                    <button
+                                        onClick={handleTestModel}
+                                        className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-gray-900 rounded-xl hover:shadow-lg hover:shadow-orange-500/30 transition-all duration-200"
+                                    >
+                                        <Play className="w-5 h-5" />
+                                        Test Model
                                     </button>
                                 </div>
                             </div>
