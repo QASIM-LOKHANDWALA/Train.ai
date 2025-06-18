@@ -121,7 +121,7 @@ export const updateLikedModel = createAsyncThunk(
             const token = getState().auth.token;
 
             const response = await axios.get(
-                `http://127.0.0.1:5050/api/v1/user/update-liked-model/${modelId}`,
+                `http://127.0.0.1:5050/api/v1/user/update-liked-model/${modelId}/`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -137,7 +137,9 @@ export const updateLikedModel = createAsyncThunk(
                 return rejectWithValue(data.message);
             }
 
-            return { modelId, state: data.state };
+            console.log("data is ", data.data);
+
+            return data;
         } catch (error) {
             return rejectWithValue(
                 error.response?.data?.message ||
@@ -235,7 +237,8 @@ export const authSlice = createSlice({
                 state.isLoading = false;
                 state.error = null;
 
-                const { modelId, likeState } = action.payload;
+                const { data } = action.payload;
+                const { action: likeState, model_id: modelId } = data;
 
                 if (likeState === "like") {
                     if (!state.user.liked_models.includes(modelId)) {

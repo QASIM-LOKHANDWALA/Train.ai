@@ -267,7 +267,6 @@ export const updateLikedModel = asyncHandler(async (req, res) => {
             ? user.liked_models.filter((id) => id !== modelId)
             : [...user.liked_models, modelId];
 
-        // Prepare axios request with timeout and proper error handling
         const axiosConfig = {
             headers: {
                 "Content-Type": "application/json",
@@ -281,9 +280,7 @@ export const updateLikedModel = asyncHandler(async (req, res) => {
 
         let externalApiResponse;
         try {
-            const apiUrl = `${
-                process.env.ML_API_BASE_URL || "http://127.0.0.1:8000"
-            }/api/v1/trained-model/update-model/${modelId}/`;
+            const apiUrl = `http://127.0.0.1:8000/api/v1/trained-model/update-model/${modelId}/`;
 
             externalApiResponse = await axios.put(
                 apiUrl,
@@ -389,7 +386,7 @@ export const updateLikedModel = asyncHandler(async (req, res) => {
                 success: true,
                 data: {
                     user: savedUser,
-                    action: state,
+                    action: externalApiResponse.data.state,
                     model_id: modelId,
                     total_liked_models: savedUser.liked_models.length,
                 },

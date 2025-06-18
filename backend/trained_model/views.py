@@ -298,7 +298,6 @@ class ModelUpdateView(APIView):
         try:
             trained_model = self.get_object(pk)
             
-            # Validate state parameter
             state = request.data.get('state')
             if not state:
                 return Response({
@@ -312,7 +311,7 @@ class ModelUpdateView(APIView):
                     "message": "'state' must be either 'like' or 'dislike'."
                 }, status=status.HTTP_400_BAD_REQUEST)
             
-            # Update likes
+            print(f"State is : {state}")
             if state == 'like':
                 trained_model.likes += 1
             elif state == 'dislike':
@@ -324,12 +323,15 @@ class ModelUpdateView(APIView):
                         "message": "Cannot dislike a model with zero likes."
                     }, status=status.HTTP_400_BAD_REQUEST)
             
+            print(f"Update Trained model {trained_model.likes} after {state}")
+            
             trained_model.save()
             serializer = TrainedModelSerializer(trained_model)
             
             return Response({
                 "message": f"Model {state}d successfully.",
-                "data": serializer.data
+                "data": serializer.data,
+                "state": state
             }, status=status.HTTP_200_OK)
             
         except Http404:

@@ -33,8 +33,10 @@ const ModelDetail = () => {
     const [loading, setLoading] = useState(true);
 
     const [currentGraphIndex, setCurrentGraphIndex] = useState(0);
-    const [isLiked, setIsLiked] = useState(false);
-    const [likeCount, setLikeCount] = useState(0);
+    const [isLiked, setIsLiked] = useState(user.liked_models.includes(id));
+    const [likeCount, setLikeCount] = useState(
+        modelData && modelData?.model?.likes
+    );
     const [imageError, setImageError] = useState(false);
 
     const isClassification =
@@ -352,7 +354,7 @@ const ModelDetail = () => {
 
                                 <div className="flex items-center gap-4">
                                     {modelData &&
-                                        modelData.model.user_id ==
+                                        modelData?.model?.user_id ==
                                             user["_id"] && (
                                             <button
                                                 onClick={handlePublicState}
