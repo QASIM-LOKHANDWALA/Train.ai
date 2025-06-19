@@ -2,6 +2,15 @@ import axios from "axios";
 import FormData from "form-data";
 import User from "../models/userModel.js";
 
+const logger = {
+    error: (message) =>
+        console.error(`[ERROR] ${new Date().toISOString()} - ${message}`),
+    info: (message) =>
+        console.log(`[INFO] ${new Date().toISOString()} - ${message}`),
+    warn: (message) =>
+        console.warn(`[WARN] ${new Date().toISOString()} - ${message}`),
+};
+
 export const trainModel = async (req, res) => {
     try {
         const currUser = await User.findById(req.user.userId);
@@ -80,7 +89,7 @@ export const trainModel = async (req, res) => {
             });
         }
     } catch (error) {
-        console.error("Error during model training:", error.message);
+        logger.error(`Error during model training: ${error.message}`);
 
         if (error.response) {
             return res.status(error.response.status || 500).json({
@@ -95,7 +104,6 @@ export const trainModel = async (req, res) => {
                 error: error.message,
             });
         } else {
-            // Other errors
             return res.status(500).json({
                 message: "Internal server error.",
                 success: false,

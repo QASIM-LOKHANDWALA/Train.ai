@@ -12,10 +12,18 @@ const checkPassword = async (value, hashedValue) => {
     return result;
 };
 
-// Simple email validation
 const isValidEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
+};
+
+const logger = {
+    error: (message) =>
+        console.error(`[ERROR] ${new Date().toISOString()} - ${message}`),
+    info: (message) =>
+        console.log(`[INFO] ${new Date().toISOString()} - ${message}`),
+    warn: (message) =>
+        console.warn(`[WARN] ${new Date().toISOString()} - ${message}`),
 };
 
 export const signup = async (req, res) => {
@@ -67,7 +75,7 @@ export const signup = async (req, res) => {
         const result = await newUser.save();
         result.password = undefined;
 
-        console.log(`New user created: ${result.email}`);
+        logger.info(`New user created: ${result.email}`);
 
         return res.status(201).json({
             message: "Account created successfully.",
@@ -75,16 +83,8 @@ export const signup = async (req, res) => {
             user: result,
         });
     } catch (error) {
-        console.log(`Error during signup: ${error.message}`);
+        logger.error(`Error during signup: ${error.message}`);
 
-        if (error.code === 11000) {
-            return res.status(400).json({
-                message: "User already exists with this email.",
-                success: false,
-            });
-        }
-
-        // Handle validation errors
         if (error.name === "ValidationError") {
             return res.status(400).json({
                 message: "Invalid user data provided.",
@@ -154,7 +154,7 @@ export const signin = async (req, res) => {
         const userObj = existingUser.toObject();
         delete userObj.password;
 
-        console.log(`User logged in: ${userObj.email}`);
+        logger.info(`User logged in: ${userObj.email}`);
 
         // Generate JWT token
         const token = jwt.sign(
@@ -188,14 +188,6 @@ export const signin = async (req, res) => {
         if (error.name === "JsonWebTokenError") {
             return res.status(500).json({
                 message: "Token generation failed.",
-                success: false,
-            });
-        }
-
-        // Handle database connection errors
-        if (error.name === "MongoNetworkError") {
-            return res.status(503).json({
-                message: "Database connection error. Please try again.",
                 success: false,
             });
         }

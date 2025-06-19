@@ -23,7 +23,6 @@ const asyncHandler = (fn) => {
 
 export const profile = asyncHandler(async (req, res) => {
     try {
-        // Validate user authentication
         if (!req.user || !req.user.userId) {
             return res.status(401).json({
                 message: "Authentication required.",
@@ -34,7 +33,6 @@ export const profile = asyncHandler(async (req, res) => {
 
         const userId = req.user.userId;
 
-        // Validate ObjectId format
         if (!isValidObjectId(userId)) {
             return res.status(400).json({
                 message: "Invalid user ID format.",
@@ -69,27 +67,6 @@ export const profile = asyncHandler(async (req, res) => {
             }: ${error.message}`
         );
 
-        // Handle specific MongoDB errors
-        if (error.name === "CastError") {
-            return res.status(400).json({
-                message: "Invalid user ID format.",
-                success: false,
-                error: "INVALID_USER_ID",
-            });
-        }
-
-        // Handle database connection errors
-        if (
-            error.name === "MongoNetworkError" ||
-            error.name === "MongoTimeoutError"
-        ) {
-            return res.status(503).json({
-                message: "Database connection error. Please try again later.",
-                success: false,
-                error: "DATABASE_ERROR",
-            });
-        }
-
         return res.status(500).json({
             message: "An unexpected error occurred while fetching profile.",
             success: false,
@@ -100,7 +77,6 @@ export const profile = asyncHandler(async (req, res) => {
 
 export const setPremium = asyncHandler(async (req, res) => {
     try {
-        // Validate user authentication
         if (!req.user || !req.user.userId) {
             return res.status(401).json({
                 message: "Authentication required.",
@@ -111,7 +87,6 @@ export const setPremium = asyncHandler(async (req, res) => {
 
         const userId = req.user.userId;
 
-        // Validate ObjectId format
         if (!isValidObjectId(userId)) {
             return res.status(400).json({
                 message: "Invalid user ID format.",
@@ -120,7 +95,6 @@ export const setPremium = asyncHandler(async (req, res) => {
             });
         }
 
-        // Find user
         const user = await User.findById(userId).select("-__v");
         if (!user) {
             logger.warn(
@@ -133,7 +107,6 @@ export const setPremium = asyncHandler(async (req, res) => {
             });
         }
 
-        // Check if user is already premium
         if (user.premium_user === true) {
             return res.status(200).json({
                 message: "User is already a premium member.",
@@ -145,7 +118,6 @@ export const setPremium = asyncHandler(async (req, res) => {
             });
         }
 
-        // Update premium status
         user.premium_user = true;
         const updatedUser = await user.save();
 
@@ -179,18 +151,6 @@ export const setPremium = asyncHandler(async (req, res) => {
             });
         }
 
-        // Handle database connection errors
-        if (
-            error.name === "MongoNetworkError" ||
-            error.name === "MongoTimeoutError"
-        ) {
-            return res.status(503).json({
-                message: "Database connection error. Please try again later.",
-                success: false,
-                error: "DATABASE_ERROR",
-            });
-        }
-
         return res.status(500).json({
             message:
                 "An unexpected error occurred while updating premium status.",
@@ -202,7 +162,6 @@ export const setPremium = asyncHandler(async (req, res) => {
 
 export const updateLikedModel = asyncHandler(async (req, res) => {
     try {
-        // Validate user authentication
         if (!req.user || !req.user.userId) {
             return res.status(401).json({
                 message: "Authentication required.",
@@ -215,7 +174,6 @@ export const updateLikedModel = asyncHandler(async (req, res) => {
         const modelId = req.params.modelId;
         const token = req.headers.authorization?.split(" ")[1];
 
-        // Validate required parameters
         if (!modelId) {
             return res.status(400).json({
                 message: "Model ID is required.",
@@ -224,7 +182,6 @@ export const updateLikedModel = asyncHandler(async (req, res) => {
             });
         }
 
-        // Validate ObjectId formats
         if (!isValidObjectId(userId)) {
             return res.status(400).json({
                 message: "Invalid user ID format.",
@@ -242,7 +199,6 @@ export const updateLikedModel = asyncHandler(async (req, res) => {
             });
         }
 
-        // Find user
         const user = await User.findById(userId).select("-__v");
         if (!user) {
             logger.warn(
@@ -296,17 +252,6 @@ export const updateLikedModel = asyncHandler(async (req, res) => {
                 });
             }
 
-            if (
-                externalApiResponse.status === 401 ||
-                externalApiResponse.status === 403
-            ) {
-                return res.status(403).json({
-                    message: "You don't have permission to modify this model.",
-                    success: false,
-                    error: "PERMISSION_DENIED",
-                });
-            }
-
             if (externalApiResponse.status >= 400) {
                 logger.error(
                     `ML API returned error ${
@@ -326,27 +271,6 @@ export const updateLikedModel = asyncHandler(async (req, res) => {
             logger.error(
                 `Error calling ML API for model ${modelId}: ${apiError.message}`
             );
-
-            if (apiError.code === "ECONNREFUSED") {
-                return res.status(503).json({
-                    message:
-                        "ML service is currently unavailable. Please try again later.",
-                    success: false,
-                    error: "SERVICE_UNAVAILABLE",
-                });
-            }
-
-            if (
-                apiError.code === "ETIMEDOUT" ||
-                apiError.code === "ECONNABORTED"
-            ) {
-                return res.status(504).json({
-                    message:
-                        "Request to ML service timed out. Please try again.",
-                    success: false,
-                    error: "SERVICE_TIMEOUT",
-                });
-            }
 
             if (apiError.response) {
                 return res.status(502).json({
@@ -424,34 +348,6 @@ export const updateLikedModel = asyncHandler(async (req, res) => {
                 req.user?.userId || "unknown"
             }, model ${req.params?.modelId || "unknown"}: ${error.message}`
         );
-
-        if (error.name === "CastError") {
-            return res.status(400).json({
-                message: "Invalid ID format provided.",
-                success: false,
-                error: "INVALID_ID_FORMAT",
-            });
-        }
-
-        if (error.name === "ValidationError") {
-            return res.status(400).json({
-                message: "Invalid user data.",
-                success: false,
-                error: "VALIDATION_ERROR",
-                details: Object.values(error.errors).map((err) => err.message),
-            });
-        }
-
-        if (
-            error.name === "MongoNetworkError" ||
-            error.name === "MongoTimeoutError"
-        ) {
-            return res.status(503).json({
-                message: "Database connection error. Please try again later.",
-                success: false,
-                error: "DATABASE_ERROR",
-            });
-        }
 
         return res.status(500).json({
             message: "An unexpected error occurred while updating liked model.",
