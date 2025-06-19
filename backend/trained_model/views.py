@@ -77,12 +77,10 @@ class ModelDetailView(APIView):
             model_coefficients = None
             model_intercept = None
             
-            # Load model file and extract coefficients
             if trained_model.model_file:
                 try:
                     model_file_path = trained_model.model_file.path
                     
-                    # Check if file exists
                     if not os.path.exists(model_file_path):
                         logger.warning(f"Model file not found: {model_file_path}")
                     else:
@@ -149,7 +147,6 @@ class ModelDetailView(APIView):
                     "message": "The model file is missing from the server."
                 }, status=status.HTTP_404_NOT_FOUND)
 
-            # Load model
             try:
                 model = joblib.load(model_file_path)
             except (FileNotFoundError, EOFError, ValueError) as e:
@@ -167,13 +164,6 @@ class ModelDetailView(APIView):
                     "message": "'features' field is required."
                 }, status=status.HTTP_400_BAD_REQUEST)
             
-            if not isinstance(features_input, list):
-                return Response({
-                    "error": "Invalid input format.",
-                    "message": "'features' must be a list of numeric values."
-                }, status=status.HTTP_400_BAD_REQUEST)
-            
-            # Validate that all features are numeric
             try:
                 features_array = np.array(features_input, dtype=float).reshape(1, -1)
             except (ValueError, TypeError) as e:
@@ -212,7 +202,6 @@ class ModelDetailView(APIView):
         try:
             trained_model = self.get_object(pk)
             
-            # Check if user owns the model
             if hasattr(trained_model, 'user_id') and trained_model.user_id != request.user.id:
                 return Response({
                     "error": "Permission denied.",
@@ -311,7 +300,6 @@ class ModelUpdateView(APIView):
                     "message": "'state' must be either 'like' or 'dislike'."
                 }, status=status.HTTP_400_BAD_REQUEST)
             
-            print(f"State is : {state}")
             if state == 'like':
                 trained_model.likes += 1
             elif state == 'dislike':
@@ -322,8 +310,6 @@ class ModelUpdateView(APIView):
                         "error": "Invalid operation.",
                         "message": "Cannot dislike a model with zero likes."
                     }, status=status.HTTP_400_BAD_REQUEST)
-            
-            print(f"Update Trained model {trained_model.likes} after {state}")
             
             trained_model.save()
             serializer = TrainedModelSerializer(trained_model)
@@ -350,7 +336,6 @@ class ModelUpdateView(APIView):
 @permission_classes([IsAuthenticated])
 def getUserLikedModels(request):
     try:
-        # Handle empty request body
         if not request.body:
             return Response({
                 "error": "Empty request body.",
@@ -368,25 +353,12 @@ def getUserLikedModels(request):
 
         model_ids = data.get('models')
         
-        if model_ids is None:
-            return Response({
-                "error": "Missing required field.",
-                "message": "'models' field is required."
-            }, status=status.HTTP_400_BAD_REQUEST)
-        
-        if not isinstance(model_ids, list):
-            return Response({
-                "error": "Invalid data type.",
-                "message": "'models' must be a list of model IDs."
-            }, status=status.HTTP_400_BAD_REQUEST)
-        
         if len(model_ids) == 0:
             return Response({
                 "message": "No models requested.",
                 "data": []
             }, status=status.HTTP_200_OK)
 
-        # Validate model IDs format
         try:
             liked_models = TrainedModel.objects.filter(id__in=model_ids)
             serializer = TrainedModelSerializer(liked_models, many=True)
