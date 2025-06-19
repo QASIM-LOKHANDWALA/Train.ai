@@ -8,6 +8,15 @@ import userRouter from "./routers/userRouter.js";
 import modelRouter from "./routers/modelRouter.js";
 import { errorHandler } from "./controllers/userContoller.js";
 
+const logger = {
+    error: (message) =>
+        console.error(`[ERROR] ${new Date().toISOString()} - ${message}`),
+    info: (message) =>
+        console.log(`[INFO] ${new Date().toISOString()} - ${message}`),
+    warn: (message) =>
+        console.warn(`[WARN] ${new Date().toISOString()} - ${message}`),
+};
+
 const corsOptions = {
     origin: "http://localhost:5173",
     credentials: true,
@@ -24,10 +33,10 @@ app.use(errorHandler);
 mongoose
     .connect(process.env.MONGO_URI)
     .then(() => {
-        console.log("Database connnected.");
+        logger.info("Database connnected.");
     })
     .catch((err) => {
-        console.error("Database connection error:", err);
+        logger.error("Database connection error:", err);
     });
 
 app.use("/api/v1/auth", authRouter);
@@ -35,5 +44,5 @@ app.use("/api/v1/user", userRouter);
 app.use("/api/v1/model", modelRouter);
 
 app.listen(process.env.PORT || 3000, () => {
-    console.log("Listening...");
+    logger.info("Listening...");
 });
