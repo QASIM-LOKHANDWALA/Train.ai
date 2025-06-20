@@ -285,6 +285,16 @@ def save_qq_plot(y_true, y_pred, path):
     plt.tight_layout()
     plt.savefig(path, facecolor=THEME_COLORS['background'], edgecolor='none', dpi=300)
     plt.close()
+    
+def save_feature_importance_graph(importances, feature_names, save_path):
+    plt.figure(figsize=(10, 6))
+    indices = np.argsort(importances)[::-1]
+    plt.bar(range(len(importances)), importances[indices])
+    plt.xticks(range(len(importances)), [feature_names[i] for i in indices], rotation=45)
+    plt.title('Feature Importance')
+    plt.tight_layout()
+    plt.savefig(save_path)
+    plt.close()
 
 def reset_matplotlib_theme():
     plt.rcdefaults()

@@ -8,6 +8,7 @@ class TrainedModel(models.Model):
         POLYNOMIAL_REGRESSION = 'PolynomialRegression', 'Polynomial Regression'
         DECISION_TREE = 'DecisionTree', 'Decision Tree'
         KNN = 'KNN', 'K-Nearest Neighbors'
+        RANDOM_FOREST = 'RandomForest', 'Random Forest'
 
     id = models.UUIDField(
         primary_key=True,
