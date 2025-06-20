@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'regression_model',
     'decision_tree',
     'k_neighbors',
+    'random_forest',
     'trained_model.apps.TrainedModelConfig',
 ]
 
@@ -95,6 +96,11 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False,
         },
+        'random_forest': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        }
     },
 }
 
