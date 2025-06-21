@@ -12,6 +12,7 @@ import {
     LuCheck,
     LuCircleAlert,
     LuX,
+    LuTrees,
 } from "react-icons/lu";
 import Papa from "papaparse";
 import { useTrain } from "../hooks/useTrain";
@@ -67,6 +68,15 @@ const TrainModel = () => {
                 "Simple yet effective for classification and regression tasks",
             color: "from-orange-500 to-red-500",
             api: "k-neighbors",
+        },
+        {
+            id: "random_forest",
+            name: "Random Forest",
+            icon: <LuTrees className="w-5 h-5" />,
+            description:
+                "Classifier that uses many decision trees to make better predictions",
+            color: "from-fuchsia-500 to-rose-500",
+            api: "random-forest",
         },
     ];
 
