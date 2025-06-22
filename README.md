@@ -26,7 +26,7 @@ Get detailed insights into your model's performance:
 -   **Interactive Visualizations** - Charts and graphs to understand your model
 -   **Feature Importance** - Discover which variables matter most
 
-### 🌐 **Discover & Share**
+### **Discover & Share**
 
 -   **Public Model Gallery** - Browse models created by the community
 -   **Model Sharing** - Make your trained models public for others to explore
@@ -65,50 +65,12 @@ Get detailed insights into your model's performance:
     -   Make your model public to help others learn
     -   Browse the Discover page for inspiration
 
-## Supported Model Types
-
-Model
-
-Best For
-
-Key Benefits
-
-Linear Regression
-
-Continuous prediction with linear relationships
-
-Fast, interpretable, baseline model
-
-Polynomial Regression
-
-Non-linear continuous prediction
-
-Captures curves and complex patterns
-
-Decision Tree
-
-Classification and interpretable decisions
-
-Visual rules, handles mixed data types
-
-K-Nearest Neighbors
-
-Pattern matching and recommendation
-
-Simple concept, no training required
-
-Random Forest
-
-Robust classification and regression
-
-High accuracy, handles overfitting
-
 ## Model Evaluation Metrics
 
 ### For Regression Models
 
 -   **Mean Squared Error (MSE)** - Average squared differences between predictions and actual values
--   **Root Mean Squared Error (RMSE)** - Square root of MSE, in original units
+-   **Root Man Squared Error (RMSE)** - Square root of MSE, in original units
 -   **R-squared (R²)** - Proportion of variance explained by the model
 -   **Mean Absolute Error (MAE)** - Average absolute differences
 
