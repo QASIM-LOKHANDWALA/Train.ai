@@ -27,5 +27,6 @@ urlpatterns = [
     path(f'{API_PATH}/decision-tree/', include('decision_tree.urls')),
     path(f'{API_PATH}/k-neighbors/', include('k_neighbors.urls')),
     path(f'{API_PATH}/random-forest/', include('random_forest.urls')),
+    path(f'{API_PATH}/ridge-regression/', include('ridge_regression.urls')),
     path(f'{API_PATH}/trained-model/', include('trained_model.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
