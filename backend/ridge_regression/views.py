@@ -216,7 +216,7 @@ class RidgeRegressionView(APIView):
                         target_column=target_col,
                         features=",".join(X.columns),
                         user_id=request.user.id,
-                        alpha_value=best_alpha if hasattr(TrainedModel, 'alpha_value') else None
+                        # alpha_value=best_alpha if hasattr(TrainedModel, 'alpha_value') else None
                     )
                     ml_model.model_file.save(f"{ml_model.id}_model.pkl", django_file)
                     ml_model.csv_file.save(f"{ml_model.id}_data.csv", csv_file)

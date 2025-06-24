@@ -13,6 +13,7 @@ import {
     LuCircleAlert,
     LuX,
     LuTrees,
+    LuChartScatter,
 } from "react-icons/lu";
 import Papa from "papaparse";
 import { useTrain } from "../hooks/useTrain";
@@ -50,6 +51,15 @@ const TrainModel = () => {
                 "Handles non-linear relationships and curved data patterns",
             color: "from-purple-500 to-purple-600",
             api: "regression/polynomial",
+        },
+        {
+            id: "ridge",
+            name: "Ridge Regression",
+            icon: <LuChartScatter className="w-5 h-5" />,
+            description:
+                "Adds a penalty term mitigate multicollinearity and improve model stability",
+            color: "from-red-500 to-rose-600",
+            api: "ridge-regression",
         },
         {
             id: "decision_tree",
