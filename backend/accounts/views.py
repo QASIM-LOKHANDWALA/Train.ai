@@ -1,6 +1,8 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.contrib.auth.hashers import make_password, check_password
 from django.views.decorators.csrf import csrf_exempt
 from .models import User
@@ -13,6 +15,7 @@ EMAIL_REGEX = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
 
 @csrf_exempt
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def register_view(request):
     data = request.data
     email = data.get('email', '').lower().strip()
@@ -63,6 +66,7 @@ def register_view(request):
 
 @csrf_exempt
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def login_view(request):
     data = request.data
     email = data.get('email', '').lower().strip()
@@ -118,6 +122,13 @@ def profile_view(request):
     serializer = UserSerializer(user)
     return Response(serializer.data)
 
+class UserProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        serialized = UserSerializer(user)
+        return Response(serialized.data)
 
 def get_user_from_token(request):
     auth_header = request.headers.get('Authorization')
