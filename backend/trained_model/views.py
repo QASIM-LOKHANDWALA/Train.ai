@@ -2,12 +2,15 @@ from datetime import datetime
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from django.http import Http404, HttpResponse
 from django.core.exceptions import ValidationError
+from accounts.models import User
 
+import requests
 import json
 import joblib
 from sklearn.preprocessing import PolynomialFeatures
@@ -42,7 +45,7 @@ class UserTrainedModelView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class ModelListView(APIView):
-    
+    permission_classes = [IsAuthenticated]
     def get(self, request):
         try:
             trained_models = TrainedModel.objects.filter(is_public=True)
@@ -395,3 +398,86 @@ def download_model_report(request, model_id):
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
     
     return response
+
+logger = logging.getLogger(__name__)
+
+class TrainModelView(APIView):
+    parser_classes = [MultiPartParser]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+
+        try:
+            curr_user = User.objects.filter(id=user.id).first()
+            if not curr_user:
+                return Response({"message": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+
+            if not curr_user.premium_user and curr_user.limit <= 0:
+                return Response({
+                    "message": "You have reached your limit. Please upgrade to premium.",
+                    "success": False
+                }, status=status.HTTP_403_FORBIDDEN)
+
+            model_name = request.data.get("model_name")
+            target_col = request.data.get("target_col")
+            endpoint = request.data.get("endpoint")
+            file = request.FILES.get("csv_file")
+
+            if not all([model_name, target_col, endpoint, file]):
+                return Response({
+                    "message": "Missing required fields: model_name, target_col, endpoint, or file.",
+                    "success": False
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            files = {
+                "csv_file": (file.name, file.read(), file.content_type)
+            }
+            data = {
+                "model_name": model_name,
+                "target_col": target_col
+            }
+
+            token = request.META.get("HTTP_AUTHORIZATION")
+            if not token:
+                return Response({"message": "Authorization token missing."}, status=status.HTTP_401_UNAUTHORIZED)
+
+            token = token.replace("Bearer ", "")
+
+            response = requests.post(
+                f"http://localhost:8000/api/v1/{endpoint}/",
+                data=data,
+                files=files,
+                headers={"Authorization": f"Bearer {token}"}
+            )
+
+            if response.status_code == 200:
+                if not curr_user.premium_user:
+                    curr_user.limit -= 1
+                    curr_user.save()
+                return Response({
+                    "message": "Model training completed.",
+                    "success": True,
+                    "data": response.json()
+                }, status=status.HTTP_200_OK)
+            else:
+                return Response({
+                    "message": "Model training failed at ML server.",
+                    "success": False,
+                    "error": response.json()
+                }, status=response.status_code)
+
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Request error during model training: {str(e)}")
+            return Response({
+                "message": "Error communicating with ML server.",
+                "success": False,
+                "error": str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as e:
+            logger.exception("Internal server error")
+            return Response({
+                "message": "Internal server error.",
+                "success": False,
+                "error": str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

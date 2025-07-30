@@ -25,7 +25,15 @@ const Home = () => {
             try {
                 setLoading(true);
                 const response = await axios.get(
-                    "http://127.0.0.1:8000/api/v1/trained-model"
+                    "http://127.0.0.1:8000/api/v1/trained-model",
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${localStorage.getItem(
+                                "token"
+                            )}`,
+                        },
+                    }
                 );
                 console.log(response);
 

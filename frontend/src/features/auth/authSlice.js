@@ -16,7 +16,7 @@ export const signupUser = createAsyncThunk(
         try {
             console.log("Attempting signup with:", { email });
             const response = await axios.post(
-                "http://127.0.0.1:5050/api/v1/auth/signup",
+                "http://127.0.0.1:8000/api/v1/auth/signup/",
                 { email, password, full_name },
                 {
                     headers: {
@@ -51,7 +51,7 @@ export const signinUser = createAsyncThunk(
             console.log("Attempting signin with:", { email });
 
             const response = await axios.post(
-                "http://127.0.0.1:5050/api/v1/auth/signin",
+                "http://127.0.0.1:8000/api/v1/auth/signin/",
                 { email, password },
                 {
                     headers: {
@@ -90,20 +90,20 @@ export const signoutUser = createAsyncThunk(
         try {
             const token = getState().auth.token;
 
-            const response = await fetch(
-                "http://127.0.0.1:5050/api/v1/auth/signout",
+            const response = await axios.post(
+                "http://127.0.0.1:8000/api/v1/auth/signout/",
+                {},
                 {
-                    method: "GET",
                     headers: {
                         Authorization: `Bearer ${token}`,
-                        client: "not-browser",
                     },
                 }
             );
+            console.log("Signout response: ", response);
 
-            const data = await response.json();
+            const data = await response.data;
 
-            if (!response.ok) {
+            if (response.status !== 200) {
                 return rejectWithValue(data.message);
             }
 

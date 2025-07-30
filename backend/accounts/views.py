@@ -105,11 +105,12 @@ def login_view(request):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def logout_view(request):
     response = Response({
         'message': 'Logged out successfully.',
         'success': True
-    })
+    }, status=status.HTTP_200_OK)
     response.delete_cookie('Authorization')
     return response
 

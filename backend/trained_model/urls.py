@@ -8,4 +8,5 @@ urlpatterns = [
     path('update-model/<str:pk>/', views.ModelUpdateView.as_view(), name='update_model'),
     path('user/liked-models/', views.getUserLikedModels, name='user_liked_models'),
     path('report/<uuid:model_id>/', views.download_model_report, name='download_model_report'),
+    path('train/', views.TrainModelView.as_view(), name='train_model'),
 ]

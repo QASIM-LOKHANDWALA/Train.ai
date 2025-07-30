@@ -1,5 +1,6 @@
 from django.db import models
 import uuid
+from accounts.models import User
 
 # Create your models here.
 class TrainedModel(models.Model):
@@ -16,7 +17,7 @@ class TrainedModel(models.Model):
         default=uuid.uuid4,
         editable=False
     )
-    user_id = models.CharField(max_length=100)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='trained_models')
     model_type = models.CharField(
         max_length=50,
         choices=ModelType.choices

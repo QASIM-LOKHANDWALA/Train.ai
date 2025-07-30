@@ -16,7 +16,7 @@ export const useTrain = () => {
             formData.append("csv_file", csv_file);
 
             const response = await axios.post(
-                "http://127.0.0.1:5050/api/v1/model/train",
+                "http://127.0.0.1:8000/api/v1/trained-model/train/",
                 formData,
                 {
                     withCredentials: true,
