@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.contrib.auth.hashers import make_password, check_password
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.timezone import now
 from .models import User
 from .serializers import RegisterSerializer, UserSerializer
 from .utils import generate_jwt, decode_jwt
@@ -114,14 +115,53 @@ def logout_view(request):
     response.delete_cookie('Authorization')
     return response
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def update_premium_status(request):
+    user = request.user
 
-@api_view(['GET'])
-def profile_view(request):
-    user = get_user_from_token(request)
-    if not user:
-        return Response({'error': 'Unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
-    serializer = UserSerializer(user)
-    return Response(serializer.data)
+    if not user or not user.id:
+        return Response({
+            "message": "Authentication required.",
+            "success": False,
+            "error": "UNAUTHORIZED"
+        }, status=status.HTTP_401_UNAUTHORIZED)
+
+    user_id = str(user.id)
+
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        print(f"Premium update attempted for non-existent user: {user_id}")
+        return Response({
+            "message": "User not found.",
+            "success": False,
+            "error": "USER_NOT_FOUND"
+        }, status=status.HTTP_404_NOT_FOUND)
+
+    if user.premium_user:
+        return Response({
+            "message": "User is already a premium member.",
+            "success": True,
+            "data": {
+                "premium_status": True,
+                "message": "No changes made"
+            }
+        }, status=status.HTTP_200_OK)
+
+    user.premium_user = True
+    user.save()
+
+    print(f"Premium status updated successfully for user: {user_id}")
+
+    return Response({
+        "message": "Premium status updated successfully.",
+        "success": True,
+        "data": {
+            "premium_status": user.premium_user,
+            "updated_at": now().isoformat()
+        }
+    }, status=status.HTTP_200_OK)
 
 class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]
