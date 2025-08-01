@@ -22,6 +22,8 @@ def register_view(request):
     email = data.get('email', '').lower().strip()
     full_name = data.get('full_name', '').strip()
     password = data.get('password', '')
+    
+    print(f"Registering user with email: {email}, full_name: {full_name}, password: {password}s")
 
     if not email or not password or not full_name:
         return Response({'message': 'All fields are required.', 'success': False}, status=400)
@@ -35,12 +37,10 @@ def register_view(request):
     if User.objects.filter(email=email).exists():
         return Response({'message': 'User already exists with this email.', 'success': False}, status=400)
 
-    hashed_password = make_password(password)
-
     serializer = RegisterSerializer(data={
         'email': email,
         'full_name': full_name,
-        'password': hashed_password
+        'password': password
     })
 
     if serializer.is_valid():
@@ -73,6 +73,8 @@ def login_view(request):
     email = data.get('email', '').lower().strip()
     password = data.get('password', '')
 
+    print(f"Logging in user with email: {email}, password: {password}")
+
     if not email or not password:
         return Response({'message': 'Email and password are required.', 'success': False}, status=400)
 
@@ -84,7 +86,8 @@ def login_view(request):
     except User.DoesNotExist:
         return Response({'message': 'Invalid email or password.', 'success': False}, status=400)
 
-    if not check_password(password, user.password):
+    # ✅ Always use check_password to compare raw and hashed password
+    if not user.check_password(password):
         return Response({'message': 'Invalid email or password.', 'success': False}, status=400)
 
     token = generate_jwt(user)
@@ -102,7 +105,9 @@ def login_view(request):
         httponly=True,
         secure=os.environ.get('DJANGO_ENV') == 'production'
     )
+
     return response
+
 
 
 @api_view(['POST'])
@@ -169,7 +174,7 @@ class UserProfileView(APIView):
     def get(self, request):
         user = request.user
         serialized = UserSerializer(user)
-        return Response(serialized.data)
+        return Response(serialized.data, status=status.HTTP_200_OK)
 
 def get_user_from_token(request):
     auth_header = request.headers.get('Authorization')

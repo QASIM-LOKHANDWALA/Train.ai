@@ -4,6 +4,7 @@ import {
     signupUser,
     signinUser,
     signoutUser,
+    updateProfile,
     updateLikedModel,
     clearError,
     logout,
@@ -27,6 +28,10 @@ export const useAuth = () => {
         return dispatch(signoutUser());
     };
 
+    const setProfile = () => {
+        return dispatch(updateProfile());
+    };
+
     const clearAuthError = () => {
         dispatch(clearError());
     };
@@ -48,6 +53,7 @@ export const useAuth = () => {
         signup,
         signin,
         signout,
+        setProfile,
         clearAuthError,
         logoutUser,
         updateLike,

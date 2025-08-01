@@ -42,7 +42,7 @@ const Login = () => {
             if (!login) {
                 await signup({ email, password, full_name: name }).unwrap();
                 toast.success("Account created successfully!");
-                setLogin(true);
+                navigate("/home");
             } else {
                 await signin({ email, password }).unwrap();
                 toast.success("Logged in successfully!");

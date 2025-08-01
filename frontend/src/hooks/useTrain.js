@@ -1,6 +1,9 @@
 import axios from "axios";
+import { useAuth } from "./useAuth";
 
 export const useTrain = () => {
+    const { setProfile } = useAuth();
+
     const trainModel = async (model_name, target_col, csv_file, endpoint) => {
         try {
             const token = localStorage.getItem("token");
@@ -26,6 +29,10 @@ export const useTrain = () => {
                     },
                 }
             );
+
+            if (response.status === 200) {
+                await setProfile().unwrap();
+            }
 
             return response.data;
         } catch (error) {

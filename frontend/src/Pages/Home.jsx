@@ -9,6 +9,7 @@ import {
 } from "react-icons/lu";
 import axios from "axios";
 import ModelCard from "../components/ModelCard";
+import { useAuth } from "../hooks/useAuth";
 
 const Home = () => {
     const [searchQuery, setSearchQuery] = useState("");
@@ -20,6 +21,8 @@ const Home = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const { token } = useAuth();
+
     useEffect(() => {
         const fetchModels = async () => {
             try {
@@ -29,9 +32,7 @@ const Home = () => {
                     {
                         headers: {
                             "Content-Type": "application/json",
-                            Authorization: `Bearer ${localStorage.getItem(
-                                "token"
-                            )}`,
+                            Authorization: `Bearer ${token}`,
                         },
                     }
                 );

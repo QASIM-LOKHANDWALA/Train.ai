@@ -32,6 +32,13 @@ export const signupUser = createAsyncThunk(
                 return rejectWithValue(data.message);
             }
 
+            localStorage.setItem("token", data.token);
+            console.log(
+                localStorage.getItem("token")
+                    ? "Token saved"
+                    : "Token not saved"
+            );
+
             return data;
         } catch (error) {
             if (error.response && error.response.data) {
@@ -72,6 +79,14 @@ export const signinUser = createAsyncThunk(
                 token: data.token,
                 success: data.success,
             };
+
+            localStorage.setItem("token", data.token);
+            console.log(
+                localStorage.getItem("token")
+                    ? "Token saved"
+                    : "Token not saved"
+            );
+
             return result;
         } catch (error) {
             if (error.response && error.response.data) {
@@ -101,7 +116,7 @@ export const signoutUser = createAsyncThunk(
             );
             console.log("Signout response: ", response);
 
-            const data = await response.data;
+            const data = response.data;
 
             if (response.status !== 200) {
                 return rejectWithValue(data.message);
@@ -111,6 +126,30 @@ export const signoutUser = createAsyncThunk(
         } catch (error) {
             return rejectWithValue(error.message);
         }
+    }
+);
+
+export const updateProfile = createAsyncThunk(
+    "auth/updateProfile",
+    async (_, { rejectWithValue, getState }) => {
+        const token = getState().auth.token;
+
+        const response = await axios.get(
+            "http://127.0.0.1:8000/api/v1/auth/profile/",
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+
+        if (response.status !== 200) {
+            return rejectWithValue(
+                response.data?.message || "Failed to fetch profile."
+            );
+        }
+
+        return response.data;
     }
 );
 
@@ -205,8 +244,6 @@ export const authSlice = createSlice({
                     token: state.token,
                     isAuthenticated: state.isAuthenticated,
                 });
-
-                localStorage.setItem("token", action.payload.token);
             })
             .addCase(signinUser.rejected, (state, action) => {
                 console.log("Signin rejected:", action.payload);
@@ -229,6 +266,19 @@ export const authSlice = createSlice({
                 localStorage.removeItem("token");
             })
             .addCase(signoutUser.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload;
+            })
+
+            .addCase(updateProfile.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(updateProfile.fulfilled, (state, action) => {
+                console.log("update Profile : ", action.payload);
+                state.user = action.payload.user;
+                state.isLoading = false;
+            })
+            .addCase(updateProfile.rejected, (state, action) => {
                 state.isLoading = false;
                 state.error = action.payload;
             })

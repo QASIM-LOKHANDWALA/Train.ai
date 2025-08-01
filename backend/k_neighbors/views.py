@@ -27,7 +27,8 @@ class KNeighborsView(APIView):
     def hyperparameter_tuning(self, x_train, y_train, x_test, y_test):
         best_score = 0
         best_params = {}
-        for neighbors in range(1, 25):
+        max_k = min(20, len(x_train))
+        for neighbors in range(1, max_k + 1):
             model = KNeighborsClassifier(n_neighbors=neighbors)
             model.fit(x_train, y_train)
             y_pred = model.predict(x_test)
