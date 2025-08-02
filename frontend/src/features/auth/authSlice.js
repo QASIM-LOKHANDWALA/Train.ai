@@ -11,12 +11,12 @@ const initialState = {
 };
 
 export const signupUser = createAsyncThunk(
-    "auth/signup",
+    "accounts/signup",
     async ({ email, password, full_name }, { rejectWithValue }) => {
         try {
             console.log("Attempting signup with:", { email });
             const response = await axios.post(
-                "http://127.0.0.1:8000/api/v1/auth/signup/",
+                "http://127.0.0.1:8000/api/v1/accounts/signup/",
                 { email, password, full_name },
                 {
                     headers: {
@@ -52,13 +52,13 @@ export const signupUser = createAsyncThunk(
 );
 
 export const signinUser = createAsyncThunk(
-    "auth/signin",
+    "accounts/signin",
     async ({ email, password }, { rejectWithValue }) => {
         try {
             console.log("Attempting signin with:", { email });
 
             const response = await axios.post(
-                "http://127.0.0.1:8000/api/v1/auth/signin/",
+                "http://127.0.0.1:8000/api/v1/accounts/signin/",
                 { email, password },
                 {
                     headers: {
@@ -100,13 +100,13 @@ export const signinUser = createAsyncThunk(
 );
 
 export const signoutUser = createAsyncThunk(
-    "auth/signout",
+    "accounts/signout",
     async (_, { rejectWithValue, getState }) => {
         try {
             const token = getState().auth.token;
 
             const response = await axios.post(
-                "http://127.0.0.1:8000/api/v1/auth/signout/",
+                "http://127.0.0.1:8000/api/v1/accounts/signout/",
                 {},
                 {
                     headers: {
@@ -130,12 +130,12 @@ export const signoutUser = createAsyncThunk(
 );
 
 export const updateProfile = createAsyncThunk(
-    "auth/updateProfile",
+    "accounts/updateProfile",
     async (_, { rejectWithValue, getState }) => {
         const token = getState().auth.token;
 
         const response = await axios.get(
-            "http://127.0.0.1:8000/api/v1/auth/profile/",
+            "http://127.0.0.1:8000/api/v1/accounts/profile/",
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -154,17 +154,17 @@ export const updateProfile = createAsyncThunk(
 );
 
 export const updateLikedModel = createAsyncThunk(
-    "auth/updateLikedModel",
+    "accounts/updateLikedModel",
     async (modelId, { getState, rejectWithValue }) => {
         try {
             const token = getState().auth.token;
 
-            const response = await axios.get(
-                `http://127.0.0.1:5050/api/v1/user/update-liked-model/${modelId}/`,
+            const response = await axios.put(
+                `http://127.0.0.1:8000/api/v1/accounts/update-liked-model/${modelId}/`,
+                {},
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
-                        client: "not-browser",
                     },
                     withCredentials: true,
                 }

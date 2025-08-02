@@ -11,7 +11,10 @@ from .serializers import RegisterSerializer, UserSerializer
 from .utils import generate_jwt, decode_jwt
 import re
 import os
+import requests
+import logging
 
+logger = logging.getLogger(__name__)
 EMAIL_REGEX = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
 
 @csrf_exempt
@@ -86,7 +89,6 @@ def login_view(request):
     except User.DoesNotExist:
         return Response({'message': 'Invalid email or password.', 'success': False}, status=400)
 
-    # ✅ Always use check_password to compare raw and hashed password
     if not user.check_password(password):
         return Response({'message': 'Invalid email or password.', 'success': False}, status=400)
 
@@ -188,3 +190,75 @@ def get_user_from_token(request):
         return User.objects.get(id=payload['user_id'])
     except User.DoesNotExist:
         return None
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_liked_model(request, model_id):
+    user = request.user
+    
+    if not user.liked_models:
+        user.liked_models = []
+    
+    already_liked = model_id in user.liked_models
+    state = "dislike" if already_liked else "like"
+    
+    if already_liked:
+        user.liked_models.remove(model_id)
+    else:
+        user.liked_models.append(model_id)
+    
+    try:
+        token = request.headers.get('Authorization', '').replace('Bearer ', '')
+        ml_api_url = f"http://127.0.0.1:8000/api/v1/trained-model/update-model/{model_id}/"
+        
+        response = requests.put(
+            ml_api_url,
+            json={"state": state},
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {token}"
+            },
+            timeout=10
+        )
+        
+        if response.status_code == 404:
+            return Response({
+                "message": "Model not found on the ML service.",
+                "success": False,
+                "error": "MODEL_NOT_FOUND"
+            }, status=status.HTTP_404_NOT_FOUND)
+        
+        if response.status_code >= 400:
+            return Response({
+                "message": "Failed to update model status on ML service.",
+                "success": False,
+                "error": "EXTERNAL_API_ERROR"
+            }, status=status.HTTP_400_BAD_REQUEST)
+            
+    except requests.exceptions.RequestException:
+        return Response({
+            "message": "Unable to connect to ML service.",
+            "success": False,
+            "error": "SERVICE_CONNECTION_ERROR"
+        }, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+    
+    try:
+        user.save()
+        
+        return Response({
+            "message": f"Model {'added to' if state == 'like' else 'removed from'} liked models successfully.",
+            "success": True,
+            "data": {
+                "action": state,
+                "model_id": model_id,
+                "total_liked_models": len(user.liked_models)
+            }
+        }, status=status.HTTP_200_OK)
+        
+    except Exception as e:
+        logger.error(f"Error saving user liked models: {str(e)}")
+        return Response({
+            "message": "Failed to save liked model status.",
+            "success": False,
+            "error": "DATABASE_SAVE_ERROR"
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
