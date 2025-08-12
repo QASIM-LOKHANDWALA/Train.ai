@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
+from django.utils import timezone
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -22,6 +23,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     limit = models.IntegerField(default=20)
     premium_user = models.BooleanField(default=False)
     liked_models = models.JSONField(default=list)
+    created_at = models.DateTimeField(default=timezone.now)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)

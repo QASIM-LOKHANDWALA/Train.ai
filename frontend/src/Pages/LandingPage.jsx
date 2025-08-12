@@ -90,16 +90,16 @@ const LandingPage = () => {
                         </p>
 
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-                            <button className="group relative bg-gradient-to-r from-dark-orange-500 to-goldenrod-500 text-rich-black-400 px-8 py-4 rounded-full font-bold text-lg hover:shadow-xl hover:shadow-dark-orange-500/30 active:scale-95 transition-all duration-200 border-2 border-transparent hover:border-goldenrod-300/50">
-                                <Link
-                                    to="/auth"
-                                    className="relative z-10 flex items-center"
-                                >
+                            <Link
+                                to="/auth"
+                                className="group relative bg-gradient-to-r from-dark-orange-500 to-goldenrod-500 text-rich-black-400 px-8 py-4 rounded-full font-bold text-lg hover:shadow-xl hover:shadow-dark-orange-500/30 active:scale-95 transition-all duration-200 border-2 border-transparent hover:border-goldenrod-300/50"
+                            >
+                                <div className="relative z-10 flex items-center">
                                     Start Training Now
                                     <LuChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                                </Link>
+                                </div>
                                 <div className="absolute inset-0 bg-gradient-to-r from-goldenrod-400 to-dark-orange-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
-                            </button>
+                            </Link>
 
                             <button className="group flex items-center text-anti-flash-white-400 hover:text-anti-flash-white-300 transition-colors duration-200">
                                 <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-r from-raisin-black-500 to-raisin-black-alt-500 rounded-full mr-4 group-hover:scale-110 transition-transform duration-200 border border-raisin-black-600">

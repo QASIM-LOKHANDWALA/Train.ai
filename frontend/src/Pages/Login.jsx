@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -48,7 +48,15 @@ const Login = () => {
                 toast.success("Logged in successfully!");
                 navigate("/home");
             }
+            if (error) {
+                toast.error(error);
+                clearAuthError();
+            }
         } catch (err) {
+            if (error) {
+                toast.error(error);
+                clearAuthError();
+            }
             console.error("Authentication error:", err);
         }
     };
