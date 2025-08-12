@@ -34,6 +34,10 @@ const Login = () => {
         clearAuthError,
     } = useAuth();
 
+    useEffect(() => {
+        console.log(isLoading);
+    }, [isLoading]);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log("Form submitted", { name, email, password, login });
@@ -218,13 +222,24 @@ const Login = () => {
                         <button
                             type="button"
                             onClick={handleSubmit}
-                            className="group relative w-full bg-gradient-to-r from-orange-500 to-yellow-500 text-gray-900 py-3 px-4 rounded-xl font-bold text-lg hover:shadow-xl hover:shadow-orange-500/30 active:scale-95 transition-all duration-200 border-2 border-transparent hover:border-yellow-300/50"
+                            disabled={isLoading}
+                            className="group relative w-full bg-gradient-to-r from-orange-500 to-yellow-500 text-gray-900 py-3 px-4 rounded-xl font-bold text-lg hover:shadow-xl hover:shadow-orange-500/30 active:scale-95 transition-all duration-200 border-2 border-transparent hover:border-yellow-300/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                         >
-                            <span className="relative z-10 flex items-center justify-center">
+                            {/* <span className="relative z-10 flex items-center justify-center">
                                 {login ? "Sign In" : "Create Account"}
                                 <LuChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                            </span> */}
+                            <span className="relative z-10 flex items-center justify-center">
+                                {isLoading ? (
+                                    <>
+                                        <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin mr-2"></div>
+                                        {login ? "Sign In" : "Create Account"}
+                                    </>
+                                ) : (
+                                    <>{login ? "Sign In" : "Create Account"}</>
+                                )}
                             </span>
-                            <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+                            {/* <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div> */}
                         </button>
 
                         <div className="text-center">
