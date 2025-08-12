@@ -29,16 +29,17 @@ export default function Navbar() {
                 <img className="h-9 invert" src="logo.png" />
             </Link>
 
-            <ul className="md:flex hidden items-center gap-10">
-                <li>
-                    <Link
-                        className="hover:text-gray-500/80 transition"
-                        to="/home"
-                    >
-                        Home
-                    </Link>
-                </li>
-                {isAuthenticated && (
+            {isAuthenticated && (
+                <ul className="md:flex hidden items-center gap-10">
+                    <li>
+                        <Link
+                            className="hover:text-gray-500/80 transition"
+                            to="/home"
+                        >
+                            Home
+                        </Link>
+                    </li>
+
                     <li>
                         <Link
                             className="hover:text-gray-500/80 transition"
@@ -47,24 +48,16 @@ export default function Navbar() {
                             Train
                         </Link>
                     </li>
-                )}
-                <li>
-                    <Link
-                        className="hover:text-gray-500/80 transition"
-                        to="/profile"
-                    >
-                        Profile
-                    </Link>
-                </li>
-                <li>
-                    <Link
-                        className="hover:text-gray-500/80 transition"
-                        to="/pricing"
-                    >
-                        Pricing
-                    </Link>
-                </li>
-            </ul>
+                    <li>
+                        <Link
+                            className="hover:text-gray-500/80 transition"
+                            to="/profile"
+                        >
+                            Profile
+                        </Link>
+                    </li>
+                </ul>
+            )}
 
             {isAuthenticated ? (
                 <button
@@ -104,28 +97,35 @@ export default function Navbar() {
                     isMobileMenuOpen ? "block" : "hidden"
                 } md:hidden`}
             >
-                <ul className="flex flex-col space-y-4 text-lg">
-                    <li>
-                        <Link to="/home" className="text-sm">
-                            Home
-                        </Link>
-                    </li>
-                    <li>
-                        <a href="#" className="text-sm">
-                            Services
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" className="text-sm">
-                            Portfolio
-                        </a>
-                    </li>
-                    <li>
-                        <Link to="/pricing" className="text-sm">
-                            Pricing
-                        </Link>
-                    </li>
-                </ul>
+                {isAuthenticated && (
+                    <ul className="flex flex-col space-y-4 text-lg">
+                        <li>
+                            <Link
+                                className="hover:text-gray-500/80 transition"
+                                to="/home"
+                            >
+                                Home
+                            </Link>
+                        </li>
+
+                        <li>
+                            <Link
+                                className="hover:text-gray-500/80 transition"
+                                to="/train"
+                            >
+                                Train
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                className="hover:text-gray-500/80 transition"
+                                to="/profile"
+                            >
+                                Profile
+                            </Link>
+                        </li>
+                    </ul>
+                )}
 
                 <Link
                     to="/auth"

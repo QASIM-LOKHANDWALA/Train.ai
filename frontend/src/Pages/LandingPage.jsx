@@ -12,6 +12,7 @@ import {
     LuSparkles,
 } from "react-icons/lu";
 import { Link } from "react-router-dom";
+import Pricing from "../components/Pricing";
 
 const LandingPage = () => {
     const [activeFeature, setActiveFeature] = useState(0);
@@ -269,6 +270,8 @@ const LandingPage = () => {
                     </div>
                 </div>
             </div>
+
+            <Pricing />
 
             <div className="relative py-20 border-t border-raisin-black-600">
                 <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-96 h-96 bg-gradient-to-br from-dark-orange-500/10 to-goldenrod-500/10 rounded-full blur-3xl"></div>

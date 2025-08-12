@@ -2,7 +2,7 @@ import React from "react";
 
 const Pricing = () => {
     return (
-        <div className="min-h-screen bg-gradient-to-br from-rich-black-300 via-rich-black-400 to-raisin-black-300 py-10 px-4">
+        <div className="min-h-screen bg-gradient-to-br from-rich-black-300 via-rich-black-400 to-raisin-black-300 py-10 px-4 border-t border-raisin-black-600">
             <div className="max-w-7xl mx-auto">
                 <div className="text-center mb-16">
                     <h1 className="text-2xl md:text-3xl font-bold text-anti-flash-white-500 mb-4">
