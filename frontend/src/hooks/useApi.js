@@ -18,7 +18,7 @@ const useApi = () => {
                 withCredentials: true,
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: localStorage.getItem("token"),
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
                     ...options.headers,
                 },
                 ...options,
