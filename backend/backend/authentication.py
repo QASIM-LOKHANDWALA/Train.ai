@@ -15,6 +15,7 @@ class HeaderJWTAuthentication(authentication.BaseAuthentication):
 
         try:
             payload = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+            print("Token is valid")
         except jwt.ExpiredSignatureError:
             print("Token has expired")
             raise exceptions.AuthenticationFailed('Token has expired')

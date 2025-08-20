@@ -6,10 +6,11 @@ from reportlab.lib.pagesizes import A4
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image, PageBreak, KeepTogether
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
-from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY
+from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY, TA_LEFT
 from reportlab.graphics import renderPDF
 from PIL import Image as PILImage
 import os
+import textwrap
 
 class NumberedCanvas:
     def __init__(self, canvas, doc):
@@ -134,6 +135,77 @@ class ModelReportGenerator:
             fontName='Helvetica-Oblique',
             spaceAfter=15
         )
+        
+        # New style for table cell content
+        self.table_cell_style = ParagraphStyle(
+            'TableCell',
+            parent=self.styles['Normal'],
+            fontSize=10,
+            textColor=colors.black,
+            fontName='Helvetica',
+            alignment=TA_LEFT,
+            leading=12,
+            wordWrap='LTR',
+            leftIndent=0,
+            rightIndent=0,
+            spaceAfter=0,
+            spaceBefore=0
+        )
+
+    def _format_features_for_table(self, features_data, max_width=250):
+        """Format features list for table display with proper wrapping"""
+        try:
+            if isinstance(features_data, str):
+                features = json.loads(features_data)
+            else:
+                features = features_data
+            
+            if not isinstance(features, list):
+                return str(features)[:max_width] + '...' if len(str(features)) > max_width else str(features)
+            
+            # Create formatted feature list
+            features_text = ""
+            current_line_length = 0
+            line_limit = 50  # Characters per line
+            
+            for i, feature in enumerate(features):
+                feature_str = str(feature)
+                
+                # Add feature with proper line breaks
+                if i == 0:
+                    features_text = feature_str
+                    current_line_length = len(feature_str)
+                else:
+                    separator = ", "
+                    if current_line_length + len(separator) + len(feature_str) > line_limit:
+                        features_text += ",<br/>" + feature_str
+                        current_line_length = len(feature_str)
+                    else:
+                        features_text += separator + feature_str
+                        current_line_length += len(separator) + len(feature_str)
+                
+                # If we have too many features, truncate
+                if len(features_text) > max_width:
+                    remaining_count = len(features) - i
+                    if remaining_count > 0:
+                        features_text += f"<br/>... and {remaining_count} more features"
+                    break
+            
+            return features_text
+            
+        except Exception as e:
+            # Fallback for any parsing errors
+            features_str = str(features_data)
+            if len(features_str) > max_width:
+                # Use textwrap to break long lines
+                wrapped = textwrap.fill(features_str, width=50)
+                lines = wrapped.split('\n')
+                if len('\n'.join(lines)) > max_width:
+                    # If still too long, truncate
+                    truncated = features_str[:max_width-20]
+                    return truncated + '...'
+                return '<br/>'.join(lines)
+            return features_str
 
     def generate_report(self):
         self._add_cover_page()
@@ -269,21 +341,11 @@ class ModelReportGenerator:
             model_data.append(['Polynomial Degree', str(self.model.polynomial_degree)])
         
         if self.model.features:
-            try:
-                features = json.loads(self.model.features)
-                if isinstance(features, list):
-                    if len(features) <= 8:
-                        features_text = ', '.join(features)
-                    else:
-                        features_text = ', '.join(features[:8]) + f'<br/>... and {len(features)-8} more features'
-                else:
-                    features_text = str(features)
-            except:
-                features_text = self.model.features[:150] + '...' if len(self.model.features) > 150 else self.model.features
-            
-            model_data.append(['Input Features', features_text])
+            formatted_features = self._format_features_for_table(self.model.features)
+            features_paragraph = Paragraph(formatted_features, self.table_cell_style)
+            model_data.append(['Input Features', features_paragraph])
         
-        table = Table(model_data, colWidths=[2.5*inch, 4*inch], repeatRows=1)
+        table = Table(model_data, colWidths=[2.2*inch, 4.3*inch], repeatRows=1)
         table.setStyle(TableStyle([
             ('BACKGROUND', (0, 0), (-1, 0), self.primary_color),
             ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
@@ -294,9 +356,11 @@ class ModelReportGenerator:
             ('BACKGROUND', (0, 1), (0, -1), self.light_bg),
             ('TEXTCOLOR', (0, 1), (-1, -1), colors.black),
             ('FONTNAME', (0, 1), (0, -1), 'Helvetica-Bold'),
-            ('FONTNAME', (1, 1), (1, -1), 'Helvetica'),
-            ('FONTSIZE', (0, 1), (-1, -1), 11),
+            ('FONTSIZE', (0, 1), (0, -1), 11),
             ('ALIGN', (0, 1), (0, -1), 'LEFT'),
+            
+            ('FONTNAME', (1, 1), (1, -1), 'Helvetica'),
+            ('FONTSIZE', (1, 1), (1, -1), 10),
             ('ALIGN', (1, 1), (1, -1), 'LEFT'),
             
             ('VALIGN', (0, 0), (-1, -1), 'TOP'),
