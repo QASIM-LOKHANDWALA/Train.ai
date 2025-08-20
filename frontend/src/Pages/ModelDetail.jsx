@@ -14,6 +14,8 @@ import {
     Layers,
     Activity,
     FileText,
+    ChevronDown,
+    ChevronUp,
 } from "lucide-react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -31,6 +33,7 @@ const ModelDetail = () => {
 
     const [modelData, setModelData] = useState({});
     const [loading, setLoading] = useState(true);
+    const [showAllFeatures, setShowAllFeatures] = useState(false);
 
     const [currentGraphIndex, setCurrentGraphIndex] = useState(0);
     const [isLiked, setIsLiked] = useState(user.liked_models.includes(id));
@@ -82,6 +85,8 @@ const ModelDetail = () => {
     useEffect(() => {
         console.log("model data ", modelData);
         console.log("user data ", user);
+        console.log(modelData?.model?.user_id);
+        console.log();
     }, [modelData]);
 
     const handleTestModel = () => {
@@ -196,171 +201,230 @@ const ModelDetail = () => {
     };
 
     const renderClassificationStats = () => (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 border border-slate-700">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-4 md:p-6 border border-slate-700">
                 <div className="flex items-center justify-between mb-2">
-                    <Target className="w-6 h-6 text-yellow-500" />
-                    <span className="text-2xl font-bold text-white">
+                    <Target className="w-5 h-5 md:w-6 md:h-6 text-yellow-500" />
+                    <span className="text-lg md:text-2xl font-bold text-white">
                         {modelData.metrics &&
                             formatPercentage(modelData.metrics.accuracy)}
                     </span>
                 </div>
-                <p className="text-gray-400 text-sm">Accuracy</p>
+                <p className="text-gray-400 text-xs md:text-sm">Accuracy</p>
             </div>
 
-            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 border border-slate-700">
+            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-4 md:p-6 border border-slate-700">
                 <div className="flex items-center justify-between mb-2">
-                    <Activity className="w-6 h-6 text-orange-500" />
-                    <span className="text-2xl font-bold text-white">
+                    <Activity className="w-5 h-5 md:w-6 md:h-6 text-orange-500" />
+                    <span className="text-lg md:text-2xl font-bold text-white">
                         {modelData.metrics &&
                             formatPercentage(modelData.metrics.precision)}
                     </span>
                 </div>
-                <p className="text-gray-400 text-sm">Precision</p>
+                <p className="text-gray-400 text-xs md:text-sm">Precision</p>
             </div>
 
-            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 border border-slate-700">
+            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-4 md:p-6 border border-slate-700">
                 <div className="flex items-center justify-between mb-2">
-                    <TrendingUp className="w-6 h-6 text-yellow-500" />
-                    <span className="text-2xl font-bold text-white">
+                    <TrendingUp className="w-5 h-5 md:w-6 md:h-6 text-yellow-500" />
+                    <span className="text-lg md:text-2xl font-bold text-white">
                         {modelData.metrics &&
                             formatPercentage(modelData.metrics.recall)}
                     </span>
                 </div>
-                <p className="text-gray-400 text-sm">Recall</p>
+                <p className="text-gray-400 text-xs md:text-sm">Recall</p>
             </div>
 
-            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 border border-slate-700">
+            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-4 md:p-6 border border-slate-700">
                 <div className="flex items-center justify-between mb-2">
-                    <BarChart3 className="w-6 h-6 text-orange-500" />
-                    <span className="text-2xl font-bold text-white">
+                    <BarChart3 className="w-5 h-5 md:w-6 md:h-6 text-orange-500" />
+                    <span className="text-lg md:text-2xl font-bold text-white">
                         {modelData.metrics &&
                             formatPercentage(modelData.metrics.f1_score)}
                     </span>
                 </div>
-                <p className="text-gray-400 text-sm">F1 Score</p>
+                <p className="text-gray-400 text-xs md:text-sm">F1 Score</p>
             </div>
         </div>
     );
 
     const renderRegressionStats = () => (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 border border-slate-700">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-4 md:p-6 border border-slate-700">
                 <div className="flex items-center justify-between mb-2">
-                    <Target className="w-6 h-6 text-yellow-500" />
-                    <span className="text-2xl font-bold text-white">
+                    <Target className="w-5 h-5 md:w-6 md:h-6 text-yellow-500" />
+                    <span className="text-lg md:text-2xl font-bold text-white">
                         {modelData.metrics &&
                             formatNumber(modelData.metrics.r2_score)}
                     </span>
                 </div>
-                <p className="text-gray-400 text-sm">R² Score</p>
+                <p className="text-gray-400 text-xs md:text-sm">R² Score</p>
             </div>
 
-            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 border border-slate-700">
+            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-4 md:p-6 border border-slate-700">
                 <div className="flex items-center justify-between mb-2">
-                    <Activity className="w-6 h-6 text-orange-500" />
-                    <span className="text-2xl font-bold text-white">
+                    <Activity className="w-5 h-5 md:w-6 md:h-6 text-orange-500" />
+                    <span className="text-lg md:text-2xl font-bold text-white">
                         {modelData.metrics &&
                             formatNumber(modelData.metrics.mse)}
                     </span>
                 </div>
-                <p className="text-gray-400 text-sm">MSE</p>
+                <p className="text-gray-400 text-xs md:text-sm">MSE</p>
             </div>
 
-            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 border border-slate-700">
+            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-4 md:p-6 border border-slate-700">
                 <div className="flex items-center justify-between mb-2">
-                    <BarChart3 className="w-6 h-6 text-yellow-500" />
-                    <span className="text-2xl font-bold text-white">
+                    <BarChart3 className="w-5 h-5 md:w-6 md:h-6 text-yellow-500" />
+                    <span className="text-lg md:text-2xl font-bold text-white">
                         {modelData.metrics &&
                             formatNumber(modelData.metrics.mae)}
                     </span>
                 </div>
-                <p className="text-gray-400 text-sm">MAE</p>
+                <p className="text-gray-400 text-xs md:text-sm">MAE</p>
             </div>
         </div>
     );
 
+    const renderFeaturesWithToggle = () => {
+        const features = modelData?.model?.features
+            ? modelData.model.features.split(",")
+            : [];
+        const maxVisibleFeatures = 6;
+        const shouldShowToggle = features.length > maxVisibleFeatures;
+        const visibleFeatures = showAllFeatures
+            ? features
+            : features.slice(0, maxVisibleFeatures);
+
+        return (
+            <div>
+                <h3 className="text-gray-400 text-sm font-medium mb-3">
+                    Features Used ({features.length})
+                </h3>
+                <div className="flex flex-wrap gap-2 mb-3">
+                    {visibleFeatures.map((feature, index) => (
+                        <span
+                            key={index}
+                            className="px-3 py-1.5 bg-gradient-to-r from-gray-800 to-slate-800 text-gray-300 rounded-lg text-sm border border-slate-700 hover:border-slate-600 transition-colors duration-200"
+                        >
+                            {feature.trim()}
+                        </span>
+                    ))}
+                </div>
+                {shouldShowToggle && (
+                    <button
+                        onClick={() => setShowAllFeatures(!showAllFeatures)}
+                        className="flex items-center gap-1 text-orange-500 hover:text-orange-400 text-sm font-medium transition-colors duration-200"
+                    >
+                        {showAllFeatures ? (
+                            <>
+                                <ChevronUp className="w-4 h-4" />
+                                Show Less
+                            </>
+                        ) : (
+                            <>
+                                <ChevronDown className="w-4 h-4" />
+                                Show {features.length - maxVisibleFeatures} More
+                            </>
+                        )}
+                    </button>
+                )}
+            </div>
+        );
+    };
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-rich-black-300 via-rich-black-400 to-raisin-black-300">
-            <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-dark-orange-500/20 to-goldenrod-500/20 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-goldenrod-500/15 to-dark-orange-500/15 rounded-full blur-3xl"></div>
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-dark-orange-500/5 to-goldenrod-500/5 rounded-full blur-3xl"></div>
+            <div className="absolute top-0 right-0 w-64 h-64 md:w-96 md:h-96 bg-gradient-to-br from-dark-orange-500/20 to-goldenrod-500/20 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 left-0 w-48 h-48 md:w-80 md:h-80 bg-gradient-to-tr from-goldenrod-500/15 to-dark-orange-500/15 rounded-full blur-3xl"></div>
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[600px] md:h-[600px] bg-gradient-to-br from-dark-orange-500/5 to-goldenrod-500/5 rounded-full blur-3xl"></div>
+
             {loading ? (
-                <div className="text-white text-center mt-10">
-                    Loading model details...
+                <div className="text-white text-center mt-10 px-4">
+                    <div className="inline-flex items-center gap-3">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
+                        <span className="text-lg">
+                            Loading model details...
+                        </span>
+                    </div>
                 </div>
             ) : (
                 <>
-                    <div className="relative max-w-7xl mx-auto px-4 py-8">
-                        <div className="mb-8">
+                    <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8">
+                        <div className="mb-6 md:mb-8">
                             <Link
                                 to="/home"
-                                className="flex items-center text-gray-400 hover:text-gray-300 mb-6 transition-colors duration-200"
+                                className="flex items-center text-gray-400 hover:text-gray-300 mb-4 md:mb-6 transition-colors duration-200 text-sm md:text-base"
                             >
-                                <ChevronLeft className="w-5 h-5 mr-2" />
+                                <ChevronLeft className="w-4 h-4 md:w-5 md:h-5 mr-2" />
                                 Back to Models
                             </Link>
 
-                            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-                                <div>
-                                    <div className="flex items-center gap-3 mb-4">
-                                        <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-xl flex items-center justify-center">
-                                            <Brain className="w-6 h-6 text-gray-900" />
-                                        </div>
-                                        <div>
-                                            <h1 className="text-3xl md:text-4xl font-bold text-white">
-                                                {modelData.model &&
-                                                    modelData.model.name}
-                                            </h1>
-                                            <div className="flex items-center gap-4 text-gray-400 text-sm">
-                                                <span className="flex items-center gap-1">
-                                                    <Layers className="w-4 h-4" />
+                            <div className="flex flex-col space-y-4 md:space-y-6">
+                                <div className="flex items-start gap-3 md:gap-4">
+                                    <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                                        <Brain className="w-5 h-5 md:w-6 md:h-6 text-gray-900" />
+                                    </div>
+                                    <div className="min-w-0 flex-1">
+                                        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white leading-tight break-words">
+                                            {modelData.model &&
+                                                modelData.model.name}
+                                        </h1>
+                                        <div className="flex flex-wrap items-center gap-2 md:gap-4 text-gray-400 text-xs md:text-sm mt-2">
+                                            <span className="flex items-center gap-1">
+                                                <Layers className="w-3 h-3 md:w-4 md:h-4 flex-shrink-0" />
+                                                <span className="truncate">
                                                     {modelData.model &&
                                                         modelData.model
                                                             .model_type}
                                                 </span>
-                                                <span className="flex items-center gap-1">
-                                                    <Calendar className="w-4 h-4" />
+                                            </span>
+                                            <span className="flex items-center gap-1">
+                                                <Calendar className="w-3 h-3 md:w-4 md:h-4 flex-shrink-0" />
+                                                <span className="truncate">
                                                     {modelData.model &&
                                                         formatDate(
                                                             modelData.model
                                                                 .created_at
                                                         )}
                                                 </span>
-                                                <span className="flex items-center gap-1">
-                                                    <Eye className="w-4 h-4" />
+                                            </span>
+                                            <span className="flex items-center gap-1">
+                                                <Eye className="w-3 h-3 md:w-4 md:h-4 flex-shrink-0" />
+                                                <span>
                                                     {modelData.model &&
                                                     modelData.model.is_public
                                                         ? "Public"
                                                         : "Private"}
                                                 </span>
-                                            </div>
+                                            </span>
                                         </div>
-                                    </div>
-
-                                    <div className="flex items-center gap-2 mb-4">
-                                        <span className="px-3 py-1 bg-gradient-to-r from-orange-500/20 to-yellow-500/20 text-yellow-500 rounded-full text-sm font-medium border border-yellow-500/30">
-                                            {isClassification
-                                                ? "Classification"
-                                                : "Regression"}
-                                        </span>
-                                        <span className="px-3 py-1 bg-gradient-to-r from-slate-800 to-slate-900 text-gray-400 rounded-full text-sm border border-slate-700">
-                                            Target:{" "}
-                                            {modelData.model &&
-                                                modelData.model.target_column}
-                                        </span>
                                     </div>
                                 </div>
 
-                                <div className="flex items-center gap-4">
+                                <div className="flex flex-wrap items-center gap-2">
+                                    <span className="px-2 md:px-3 py-1 bg-gradient-to-r from-orange-500/20 to-yellow-500/20 text-yellow-500 rounded-full text-xs md:text-sm font-medium border border-yellow-500/30">
+                                        {isClassification
+                                            ? "Classification"
+                                            : "Regression"}
+                                    </span>
+                                    <span className="px-2 md:px-3 py-1 bg-gradient-to-r from-slate-800 to-slate-900 text-gray-400 rounded-full text-xs md:text-sm border border-slate-700">
+                                        Target:{" "}
+                                        {modelData.model &&
+                                            modelData.model.target_column}
+                                    </span>
+                                </div>
+
+                                <div className="flex flex-wrap gap-2 md:gap-3">
                                     {modelData &&
                                         modelData?.model?.user_id ==
-                                            user["_id"] && (
+                                            user["id"] && (
                                             <button
                                                 onClick={handlePublicState}
-                                                className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-200 bg-gradient-to-r from-slate-800 to-slate-900 text-gray-400 hover:text-gray-300 border border-slate-700`}
+                                                className="flex items-center gap-2 px-3 md:px-4 py-2 rounded-xl transition-all duration-200 bg-gradient-to-r from-slate-800 to-slate-900 text-gray-400 hover:text-gray-300 border border-slate-700 text-sm md:text-base flex-shrink-0"
                                             >
-                                                Make{" "}
+                                                <span className="hidden sm:inline">
+                                                    Make
+                                                </span>
                                                 {modelData.model &&
                                                 !modelData.model.is_public
                                                     ? "Public"
@@ -370,18 +434,18 @@ const ModelDetail = () => {
 
                                     <button
                                         onClick={handleLike}
-                                        className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-200 ${
+                                        className={`flex items-center gap-2 px-3 md:px-4 py-2 rounded-xl transition-all duration-200 text-sm md:text-base flex-shrink-0 ${
                                             isLiked
                                                 ? "bg-gradient-to-r from-orange-500 to-yellow-500 text-gray-900"
                                                 : "bg-gradient-to-r from-slate-800 to-slate-900 text-gray-400 hover:text-gray-300 border border-slate-700"
                                         }`}
                                     >
                                         <Heart
-                                            className={`w-5 h-5 ${
+                                            className={`w-4 h-4 md:w-5 md:h-5 ${
                                                 isLiked ? "fill-current" : ""
                                             }`}
                                         />
-                                        {likeCount}
+                                        <span>{likeCount}</span>
                                     </button>
 
                                     <a
@@ -390,69 +454,58 @@ const ModelDetail = () => {
                                             modelData.model.model_file
                                         }
                                         download
-                                        className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-slate-800 to-slate-900 text-gray-400 hover:text-gray-300 border border-slate-700"
+                                        className="flex items-center gap-2 px-3 md:px-4 py-2 rounded-xl bg-gradient-to-r from-slate-800 to-slate-900 text-gray-400 hover:text-gray-300 border border-slate-700 text-sm md:text-base flex-shrink-0"
                                     >
-                                        <Save className="w-5 h-5" />
-                                        Download
+                                        <Save className="w-4 h-4 md:w-5 md:h-5" />
+                                        <span className="hidden sm:inline">
+                                            Download
+                                        </span>
                                     </a>
 
                                     <button
                                         onClick={handleDownloadReport}
-                                        className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-slate-800 to-slate-900 text-gray-400 hover:text-gray-300 border border-slate-700 rounded-xl transition-all duration-200 hover:border-slate-600"
+                                        className="flex items-center gap-2 px-3 md:px-4 py-2 bg-gradient-to-r from-slate-800 to-slate-900 text-gray-400 hover:text-gray-300 border border-slate-700 rounded-xl transition-all duration-200 hover:border-slate-600 text-sm md:text-base flex-shrink-0"
                                     >
-                                        <FileText className="w-5 h-5" />
-                                        PDF Report
+                                        <FileText className="w-4 h-4 md:w-5 md:h-5" />
+                                        <span className="hidden sm:inline">
+                                            PDF
+                                        </span>
+                                        <span className="sm:hidden">
+                                            Report
+                                        </span>
                                     </button>
 
                                     <button
                                         onClick={handleTestModel}
-                                        className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-gray-900 rounded-xl hover:shadow-lg hover:shadow-orange-500/30 transition-all duration-200"
+                                        className="flex items-center gap-2 px-3 md:px-4 py-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-gray-900 rounded-xl hover:shadow-lg hover:shadow-orange-500/30 transition-all duration-200 text-sm md:text-base flex-shrink-0"
                                     >
-                                        <Play className="w-5 h-5" />
-                                        Test Model
+                                        <Play className="w-4 h-4 md:w-5 md:h-5" />
+                                        <span>Test</span>
+                                        <span className="hidden sm:inline">
+                                            Model
+                                        </span>
                                     </button>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="grid lg:grid-cols-3 gap-8 mb-8">
+                        <div className="grid lg:grid-cols-3 gap-6 md:gap-8 mb-6 md:mb-8">
                             <div className="lg:col-span-1">
-                                <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 border border-slate-700 h-full">
-                                    <h2 className="text-xl font-bold text-white mb-6">
+                                <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-4 md:p-6 border border-slate-700 h-full">
+                                    <h2 className="text-lg md:text-xl font-bold text-white mb-4 md:mb-6">
                                         Model Information
                                     </h2>
 
-                                    <div className="space-y-4">
-                                        <div>
-                                            <h3 className="text-gray-400 text-sm font-medium mb-2">
-                                                Features Used
-                                            </h3>
-                                            <div className="flex flex-wrap gap-2">
-                                                {modelData?.model?.features &&
-                                                    modelData.model.features
-                                                        .split(",")
-                                                        .map(
-                                                            (
-                                                                feature,
-                                                                index
-                                                            ) => (
-                                                                <span
-                                                                    key={index}
-                                                                    className="px-3 py-1 bg-gradient-to-r from-gray-800 to-slate-800 text-gray-300 rounded-lg text-sm border border-slate-700"
-                                                                >
-                                                                    {feature.trim()}
-                                                                </span>
-                                                            )
-                                                        )}
-                                            </div>
-                                        </div>
+                                    <div className="space-y-4 md:space-y-6">
+                                        {modelData?.model?.features &&
+                                            renderFeaturesWithToggle()}
 
                                         {modelData.polynomial_degree && (
                                             <div>
                                                 <h3 className="text-gray-400 text-sm font-medium mb-2">
                                                     Polynomial Degree
                                                 </h3>
-                                                <span className="px-3 py-1 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 text-yellow-500 rounded-lg text-sm border border-yellow-500/30">
+                                                <span className="px-3 py-1.5 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 text-yellow-500 rounded-lg text-sm border border-yellow-500/30">
                                                     {
                                                         modelData.model
                                                             .polynomial_degree
@@ -465,18 +518,54 @@ const ModelDetail = () => {
                                             <h3 className="text-gray-400 text-sm font-medium mb-2">
                                                 Model ID
                                             </h3>
-                                            <p className="text-gray-300 text-sm font-mono bg-gradient-to-r from-gray-800 to-slate-800 p-3 rounded-lg border border-slate-700 break-all">
+                                            <div className="text-gray-300 text-xs md:text-sm font-mono bg-gradient-to-r from-gray-800 to-slate-800 p-3 rounded-lg border border-slate-700 break-all">
                                                 {modelData.model &&
                                                     modelData.model.id}
-                                            </p>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <h3 className="text-gray-400 text-sm font-medium mb-2">
+                                                Training Details
+                                            </h3>
+                                            <div className="space-y-2">
+                                                <div className="flex justify-between text-sm">
+                                                    <span className="text-gray-400">
+                                                        Algorithm:
+                                                    </span>
+                                                    <span className="text-gray-300">
+                                                        {modelData.model
+                                                            ?.model_type ||
+                                                            "N/A"}
+                                                    </span>
+                                                </div>
+                                                <div className="flex justify-between text-sm">
+                                                    <span className="text-gray-400">
+                                                        Task Type:
+                                                    </span>
+                                                    <span className="text-gray-300">
+                                                        {isClassification
+                                                            ? "Classification"
+                                                            : "Regression"}
+                                                    </span>
+                                                </div>
+                                                <div className="flex justify-between text-sm">
+                                                    <span className="text-gray-400">
+                                                        Status:
+                                                    </span>
+                                                    <span className="text-green-400 font-medium">
+                                                        Trained
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             <div className="lg:col-span-2">
-                                <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 border border-slate-700">
-                                    <h2 className="text-xl font-bold text-white mb-6">
+                                <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-4 md:p-6 border border-slate-700">
+                                    <h2 className="text-lg md:text-xl font-bold text-white mb-4 md:mb-6">
                                         Performance Metrics
                                     </h2>
                                     {isClassification
@@ -486,9 +575,9 @@ const ModelDetail = () => {
                             </div>
                         </div>
 
-                        <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 border border-slate-700">
-                            <div className="flex items-center justify-between mb-6">
-                                <h2 className="text-xl font-bold text-white">
+                        <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-4 md:p-6 border border-slate-700">
+                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4 md:mb-6">
+                                <h2 className="text-lg md:text-xl font-bold text-white">
                                     Model Visualizations
                                 </h2>
                                 <div className="flex items-center gap-2">
@@ -496,9 +585,9 @@ const ModelDetail = () => {
                                         onClick={prevGraph}
                                         className="p-2 bg-gradient-to-r from-slate-700 to-slate-800 text-gray-400 hover:text-gray-300 rounded-lg transition-colors duration-200 border border-slate-600"
                                     >
-                                        <ChevronLeft className="w-5 h-5" />
+                                        <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
                                     </button>
-                                    <span className="text-gray-400 text-sm">
+                                    <span className="text-gray-400 text-sm px-2">
                                         {currentGraphIndex + 1} /{" "}
                                         {modelData.graphs &&
                                             modelData.graphs.length}
@@ -507,26 +596,26 @@ const ModelDetail = () => {
                                         onClick={nextGraph}
                                         className="p-2 bg-gradient-to-r from-slate-700 to-slate-800 text-gray-400 hover:text-gray-300 rounded-lg transition-colors duration-200 border border-slate-600"
                                     >
-                                        <ChevronRight className="w-5 h-5" />
+                                        <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
                                     </button>
                                 </div>
                             </div>
 
-                            <div className="grid lg:grid-cols-2 gap-8">
-                                <div className="relative">
+                            <div className="grid lg:grid-cols-2 gap-6 md:gap-8">
+                                <div className="order-2 lg:order-1">
                                     <div className="bg-gradient-to-br from-gray-800 to-slate-800 rounded-xl p-4 border border-slate-700 aspect-square">
                                         {!imageError ? (
                                             <img
                                                 src={`${DJANGO_BASE_URL}${currentGraph?.graph_image}`}
                                                 alt={currentGraph?.title}
-                                                className={`w-full h-full object-contain rounded-lg transition-transform duration-200`}
+                                                className="w-full h-full object-contain rounded-lg transition-transform duration-200"
                                                 onError={handleImageError}
                                             />
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center">
                                                 <div className="text-center">
-                                                    <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                                                        <BarChart3 className="w-8 h-8 text-gray-900" />
+                                                    <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                        <BarChart3 className="w-6 h-6 md:w-8 md:h-8 text-gray-900" />
                                                     </div>
                                                     <p className="text-gray-400 text-sm">
                                                         Graph image not
@@ -541,17 +630,17 @@ const ModelDetail = () => {
                                     </div>
                                 </div>
 
-                                <div className="space-y-6">
+                                <div className="order-1 lg:order-2 space-y-4 md:space-y-6">
                                     <div>
-                                        <h3 className="text-xl font-bold text-white mb-2">
+                                        <h3 className="text-lg md:text-xl font-bold text-white mb-2">
                                             {currentGraph?.title}
                                         </h3>
-                                        <p className="text-gray-400 mb-4">
+                                        <p className="text-gray-400 mb-4 text-sm md:text-base">
                                             {currentGraph?.description}
                                         </p>
                                     </div>
 
-                                    <div className="grid grid-cols-2 gap-3">
+                                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-3">
                                         {modelData.graphs &&
                                             modelData.graphs.map(
                                                 (graph, index) => (
@@ -565,7 +654,7 @@ const ModelDetail = () => {
                                                                 false
                                                             );
                                                         }}
-                                                        className={`relative p-3 rounded-lg transition-all duration-200 ${
+                                                        className={`relative p-2 md:p-3 rounded-lg transition-all duration-200 ${
                                                             currentGraphIndex ===
                                                             index
                                                                 ? "bg-gradient-to-r from-orange-500/20 to-yellow-500/20 border-2 border-orange-500/50"
@@ -589,15 +678,186 @@ const ModelDetail = () => {
                                                                 }}
                                                             />
                                                             <div className="w-full h-full items-center justify-center hidden">
-                                                                <BarChart3 className="w-6 h-6 text-gray-400" />
+                                                                <BarChart3 className="w-4 h-4 md:w-6 md:h-6 text-gray-400" />
                                                             </div>
                                                         </div>
-                                                        <p className="text-xs text-gray-400 mt-2 truncate">
+                                                        <p className="text-xs text-gray-400 mt-2 truncate text-center">
                                                             {graph.title}
                                                         </p>
                                                     </button>
                                                 )
                                             )}
+                                    </div>
+
+                                    <div className="bg-gradient-to-r from-slate-700/50 to-slate-800/50 rounded-lg p-4 border border-slate-600">
+                                        <h4 className="text-sm font-semibold text-white mb-3">
+                                            Visualization Insights
+                                        </h4>
+                                        <div className="space-y-2 text-sm">
+                                            <div className="flex justify-between">
+                                                <span className="text-gray-400">
+                                                    Total Graphs:
+                                                </span>
+                                                <span className="text-gray-300">
+                                                    {modelData.graphs?.length ||
+                                                        0}
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="text-gray-400">
+                                                    Current:
+                                                </span>
+                                                <span className="text-gray-300">
+                                                    {currentGraph?.title ||
+                                                        "N/A"}
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="text-gray-400">
+                                                    Type:
+                                                </span>
+                                                <span className="text-gray-300">
+                                                    {isClassification
+                                                        ? "Classification Analysis"
+                                                        : "Regression Analysis"}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="block lg:hidden mt-6 pt-6 border-t border-slate-700">
+                                <div className="flex items-center justify-center gap-2 overflow-x-auto pb-2">
+                                    {modelData.graphs &&
+                                        modelData.graphs.map((_, index) => (
+                                            <button
+                                                key={index}
+                                                onClick={() => {
+                                                    setCurrentGraphIndex(index);
+                                                    setImageError(false);
+                                                }}
+                                                className={`w-3 h-3 rounded-full transition-all duration-200 flex-shrink-0 ${
+                                                    currentGraphIndex === index
+                                                        ? "bg-orange-500"
+                                                        : "bg-slate-600 hover:bg-slate-500"
+                                                }`}
+                                            />
+                                        ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="mt-6 md:mt-8 grid md:grid-cols-2 gap-6">
+                            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-4 md:p-6 border border-slate-700">
+                                <h3 className="text-lg font-bold text-white mb-4">
+                                    Performance Summary
+                                </h3>
+                                <div className="space-y-3">
+                                    {isClassification ? (
+                                        <>
+                                            <div className="flex items-center justify-between p-3 bg-gradient-to-r from-slate-700/50 to-slate-800/50 rounded-lg">
+                                                <span className="text-gray-400 text-sm">
+                                                    Overall Accuracy
+                                                </span>
+                                                <span className="text-white font-semibold">
+                                                    {modelData.metrics &&
+                                                        formatPercentage(
+                                                            modelData.metrics
+                                                                .accuracy
+                                                        )}
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center justify-between p-3 bg-gradient-to-r from-slate-700/50 to-slate-800/50 rounded-lg">
+                                                <span className="text-gray-400 text-sm">
+                                                    Best Metric
+                                                </span>
+                                                <span className="text-green-400 font-semibold">
+                                                    {modelData.metrics &&
+                                                        (modelData.metrics
+                                                            .f1_score > 0.8
+                                                            ? "Excellent F1"
+                                                            : modelData.metrics
+                                                                  .precision >
+                                                              0.8
+                                                            ? "High Precision"
+                                                            : "Good Performance")}
+                                                </span>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className="flex items-center justify-between p-3 bg-gradient-to-r from-slate-700/50 to-slate-800/50 rounded-lg">
+                                                <span className="text-gray-400 text-sm">
+                                                    R² Score
+                                                </span>
+                                                <span className="text-white font-semibold">
+                                                    {modelData.metrics &&
+                                                        formatNumber(
+                                                            modelData.metrics
+                                                                .r2_score
+                                                        )}
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center justify-between p-3 bg-gradient-to-r from-slate-700/50 to-slate-800/50 rounded-lg">
+                                                <span className="text-gray-400 text-sm">
+                                                    Model Quality
+                                                </span>
+                                                <span className="text-green-400 font-semibold">
+                                                    {modelData.metrics &&
+                                                        (modelData.metrics
+                                                            .r2_score > 0.8
+                                                            ? "Excellent"
+                                                            : modelData.metrics
+                                                                  .r2_score >
+                                                              0.6
+                                                            ? "Good"
+                                                            : "Fair")}
+                                                </span>
+                                            </div>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-4 md:p-6 border border-slate-700">
+                                <h3 className="text-lg font-bold text-white mb-4">
+                                    Usage Statistics
+                                </h3>
+                                <div className="space-y-3">
+                                    <div className="flex items-center justify-between p-3 bg-gradient-to-r from-slate-700/50 to-slate-800/50 rounded-lg">
+                                        <span className="text-gray-400 text-sm">
+                                            Total Likes
+                                        </span>
+                                        <span className="text-white font-semibold">
+                                            {likeCount}
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center justify-between p-3 bg-gradient-to-r from-slate-700/50 to-slate-800/50 rounded-lg">
+                                        <span className="text-gray-400 text-sm">
+                                            Visibility
+                                        </span>
+                                        <span
+                                            className={`font-semibold ${
+                                                modelData.model?.is_public
+                                                    ? "text-green-400"
+                                                    : "text-yellow-400"
+                                            }`}
+                                        >
+                                            {modelData.model?.is_public
+                                                ? "Public"
+                                                : "Private"}
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center justify-between p-3 bg-gradient-to-r from-slate-700/50 to-slate-800/50 rounded-lg">
+                                        <span className="text-gray-400 text-sm">
+                                            Created
+                                        </span>
+                                        <span className="text-white font-semibold">
+                                            {modelData.model &&
+                                                new Date(
+                                                    modelData.model.created_at
+                                                ).toLocaleDateString()}
+                                        </span>
                                     </div>
                                 </div>
                             </div>

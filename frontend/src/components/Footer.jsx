@@ -11,11 +11,9 @@ const Footer = () => {
                         alt="logo"
                     />
                     <p className="mt-6 text-sm">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing
-                        elit. Voluptate doloremque commodi excepturi nesciunt
-                        eaque ex. Quia qui inventore minima ratione deleniti
-                        aperiam at quas ea sequi, exercitationem sint amet
-                        saepe?
+                        Create, visualize, and deploy machine learning models
+                        with our intuitive platform. No programming experience
+                        needed.
                     </p>
                 </div>
                 <div className="flex-1 flex items-start md:justify-end gap-20 md:gap-40">
