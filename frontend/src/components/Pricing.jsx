@@ -115,10 +115,10 @@ const Pricing = () => {
                             <div className="mb-6 relative z-10">
                                 <div className="flex items-baseline justify-center">
                                     <span className="text-anti-flash-white-400 text-lg line-through mr-2">
-                                        $19.99
+                                        ₹899
                                     </span>
                                     <h2 className="text-anti-flash-white-200 text-5xl font-bold">
-                                        $9.99
+                                        ₹599
                                     </h2>
                                 </div>
                                 <div className="flex items-center justify-center mt-1">
