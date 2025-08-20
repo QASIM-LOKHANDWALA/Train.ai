@@ -41,6 +41,7 @@ export const signupUser = createAsyncThunk(
 
             return data;
         } catch (error) {
+            console.log("Error occured during signup: ", error);
             if (error.response && error.response.data) {
                 return rejectWithValue(
                     error.response.data.message || "Server error"
@@ -89,6 +90,8 @@ export const signinUser = createAsyncThunk(
 
             return result;
         } catch (error) {
+            console.log("Error occured during signin: ", error);
+
             if (error.response && error.response.data) {
                 return rejectWithValue(
                     error.response.data.message || "Server error"

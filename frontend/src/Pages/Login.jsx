@@ -35,33 +35,45 @@ const Login = () => {
     } = useAuth();
 
     useEffect(() => {
-        console.log(isLoading);
-    }, [isLoading]);
+        if (error) {
+            toast.error(error);
+            clearAuthError();
+        }
+    }, [error, clearAuthError]);
+
+    useEffect(() => {
+        if (isAuthenticated && user) {
+            navigate("/home");
+        }
+    }, [isAuthenticated, user, navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log("Form submitted", { name, email, password, login });
 
+        if (!email || !password || (!login && !name)) {
+            toast.error("Please fill in all required fields");
+            return;
+        }
+
         try {
+            let result;
             if (!login) {
-                await signup({ email, password, full_name: name }).unwrap();
-                toast.success("Account created successfully!");
-                navigate("/home");
+                result = await signup({ email, password, full_name: name });
+                if (result.type === "accounts/signup/fulfilled") {
+                    toast.success("Account created successfully!");
+                    navigate("/home");
+                }
             } else {
-                await signin({ email, password }).unwrap();
-                toast.success("Logged in successfully!");
-                navigate("/home");
-            }
-            if (error) {
-                toast.error(error);
-                clearAuthError();
+                result = await signin({ email, password });
+                if (result.type === "accounts/signin/fulfilled") {
+                    toast.success("Logged in successfully!");
+                    navigate("/home");
+                }
             }
         } catch (err) {
-            if (error) {
-                toast.error(error);
-                clearAuthError();
-            }
             console.error("Authentication error:", err);
+            toast.error("An unexpected error occurred");
         }
     };
 
@@ -114,7 +126,7 @@ const Login = () => {
                         </p>
                     </div>
 
-                    <div className="space-y-6">
+                    <form onSubmit={handleSubmit} className="space-y-6">
                         {!login && (
                             <div className="space-y-2">
                                 <label className="text-sm font-medium text-gray-400">
@@ -132,7 +144,7 @@ const Login = () => {
                                         }
                                         className="w-full pl-12 pr-4 py-3 bg-gradient-to-r from-gray-800 to-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200"
                                         placeholder="Enter your full name"
-                                        required
+                                        required={!login}
                                     />
                                 </div>
                             </div>
@@ -191,71 +203,48 @@ const Login = () => {
                             </div>
                         </div>
 
-                        {login && (
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center">
-                                    <input
-                                        id="remember-me"
-                                        type="checkbox"
-                                        checked={rememberMe}
-                                        onChange={(e) =>
-                                            setRememberMe(e.target.checked)
-                                        }
-                                        className="h-4 w-4 rounded border-gray-600 bg-gray-700 text-orange-500 focus:ring-orange-500 focus:ring-offset-0"
-                                    />
-                                    <label
-                                        htmlFor="remember-me"
-                                        className="ml-2 text-sm text-gray-400"
-                                    >
-                                        Remember me
-                                    </label>
-                                </div>
-                                <button
-                                    type="button"
-                                    className="text-sm text-yellow-500 hover:text-yellow-400 transition-colors"
-                                >
-                                    Forgot password?
-                                </button>
-                            </div>
-                        )}
-
                         <button
-                            type="button"
-                            onClick={handleSubmit}
+                            type="submit"
                             disabled={isLoading}
                             className="group relative w-full bg-gradient-to-r from-orange-500 to-yellow-500 text-gray-900 py-3 px-4 rounded-xl font-bold text-lg hover:shadow-xl hover:shadow-orange-500/30 active:scale-95 transition-all duration-200 border-2 border-transparent hover:border-yellow-300/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                         >
-                            {/* <span className="relative z-10 flex items-center justify-center">
-                                {login ? "Sign In" : "Create Account"}
-                                <LuChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                            </span> */}
                             <span className="relative z-10 flex items-center justify-center">
                                 {isLoading ? (
                                     <>
                                         <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin mr-2"></div>
-                                        {login ? "Sign In" : "Create Account"}
+                                        {login
+                                            ? "Signing In..."
+                                            : "Creating Account..."}
                                     </>
                                 ) : (
-                                    <>{login ? "Sign In" : "Create Account"}</>
+                                    <>
+                                        {login ? "Sign In" : "Create Account"}
+                                        <LuChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                                    </>
                                 )}
                             </span>
-                            {/* <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div> */}
                         </button>
+                    </form>
 
-                        <div className="text-center">
-                            <p className="text-gray-400">
-                                {login
-                                    ? "Don't have an account?"
-                                    : "Already have an account?"}
-                                <button
-                                    type="button"
-                                    onClick={() => setLogin(!login)}
-                                    className="ml-2 text-yellow-500 hover:text-yellow-400 font-semibold transition-colors"
-                                >
-                                    {login ? "Sign up" : "Sign in"}
-                                </button>
-                            </p>
-                        </div>
+                    <div className="text-center mt-6">
+                        <p className="text-gray-400">
+                            {login
+                                ? "Don't have an account?"
+                                : "Already have an account?"}
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setLogin(!login);
+                                    setName("");
+                                    setEmail("");
+                                    setPassword("");
+                                    clearAuthError();
+                                }}
+                                className="ml-2 text-yellow-500 hover:text-yellow-400 font-semibold transition-colors"
+                            >
+                                {login ? "Sign up" : "Sign in"}
+                            </button>
+                        </p>
                     </div>
                 </div>
                 <Link
@@ -265,7 +254,17 @@ const Login = () => {
                     <Home />
                 </Link>
             </div>
-            <Toaster />
+            <Toaster
+                position="top-center"
+                toastOptions={{
+                    duration: 4000,
+                    style: {
+                        background: "#1f2937",
+                        color: "#fff",
+                        border: "1px solid #374151",
+                    },
+                }}
+            />
         </div>
     );
 };
