@@ -205,45 +205,53 @@ const ModelDetail = () => {
             <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-4 md:p-6 border border-slate-700">
                 <div className="flex items-center justify-between mb-2">
                     <Target className="w-5 h-5 md:w-6 md:h-6 text-yellow-500" />
-                    <span className="text-lg md:text-2xl font-bold text-white">
+                    <span className="text-xl md:text-2xl font-bold text-white">
                         {modelData.metrics &&
                             formatPercentage(modelData.metrics.accuracy)}
                     </span>
                 </div>
-                <p className="text-gray-400 text-xs md:text-sm">Accuracy</p>
+                <p className="text-gray-300 text-sm md:text-base font-medium">
+                    Accuracy
+                </p>
             </div>
 
             <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-4 md:p-6 border border-slate-700">
                 <div className="flex items-center justify-between mb-2">
                     <Activity className="w-5 h-5 md:w-6 md:h-6 text-orange-500" />
-                    <span className="text-lg md:text-2xl font-bold text-white">
+                    <span className="text-xl md:text-2xl font-bold text-white">
                         {modelData.metrics &&
                             formatPercentage(modelData.metrics.precision)}
                     </span>
                 </div>
-                <p className="text-gray-400 text-xs md:text-sm">Precision</p>
+                <p className="text-gray-300 text-sm md:text-base font-medium">
+                    Precision
+                </p>
             </div>
 
             <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-4 md:p-6 border border-slate-700">
                 <div className="flex items-center justify-between mb-2">
                     <TrendingUp className="w-5 h-5 md:w-6 md:h-6 text-yellow-500" />
-                    <span className="text-lg md:text-2xl font-bold text-white">
+                    <span className="text-xl md:text-2xl font-bold text-white">
                         {modelData.metrics &&
                             formatPercentage(modelData.metrics.recall)}
                     </span>
                 </div>
-                <p className="text-gray-400 text-xs md:text-sm">Recall</p>
+                <p className="text-gray-300 text-sm md:text-base font-medium">
+                    Recall
+                </p>
             </div>
 
             <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-4 md:p-6 border border-slate-700">
                 <div className="flex items-center justify-between mb-2">
                     <BarChart3 className="w-5 h-5 md:w-6 md:h-6 text-orange-500" />
-                    <span className="text-lg md:text-2xl font-bold text-white">
+                    <span className="text-xl md:text-2xl font-bold text-white">
                         {modelData.metrics &&
                             formatPercentage(modelData.metrics.f1_score)}
                     </span>
                 </div>
-                <p className="text-gray-400 text-xs md:text-sm">F1 Score</p>
+                <p className="text-gray-300 text-sm md:text-base font-medium">
+                    F1 Score
+                </p>
             </div>
         </div>
     );
@@ -253,34 +261,40 @@ const ModelDetail = () => {
             <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-4 md:p-6 border border-slate-700">
                 <div className="flex items-center justify-between mb-2">
                     <Target className="w-5 h-5 md:w-6 md:h-6 text-yellow-500" />
-                    <span className="text-lg md:text-2xl font-bold text-white">
+                    <span className="text-xl md:text-2xl font-bold text-white">
                         {modelData.metrics &&
                             formatNumber(modelData.metrics.r2_score)}
                     </span>
                 </div>
-                <p className="text-gray-400 text-xs md:text-sm">R² Score</p>
+                <p className="text-gray-300 text-sm md:text-base font-medium">
+                    R² Score
+                </p>
             </div>
 
             <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-4 md:p-6 border border-slate-700">
                 <div className="flex items-center justify-between mb-2">
                     <Activity className="w-5 h-5 md:w-6 md:h-6 text-orange-500" />
-                    <span className="text-lg md:text-2xl font-bold text-white">
+                    <span className="text-xl md:text-2xl font-bold text-white">
                         {modelData.metrics &&
                             formatNumber(modelData.metrics.mse)}
                     </span>
                 </div>
-                <p className="text-gray-400 text-xs md:text-sm">MSE</p>
+                <p className="text-gray-300 text-sm md:text-base font-medium">
+                    MSE
+                </p>
             </div>
 
             <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-4 md:p-6 border border-slate-700">
                 <div className="flex items-center justify-between mb-2">
                     <BarChart3 className="w-5 h-5 md:w-6 md:h-6 text-yellow-500" />
-                    <span className="text-lg md:text-2xl font-bold text-white">
+                    <span className="text-xl md:text-2xl font-bold text-white">
                         {modelData.metrics &&
                             formatNumber(modelData.metrics.mae)}
                     </span>
                 </div>
-                <p className="text-gray-400 text-xs md:text-sm">MAE</p>
+                <p className="text-gray-300 text-sm md:text-base font-medium">
+                    MAE
+                </p>
             </div>
         </div>
     );
@@ -297,14 +311,14 @@ const ModelDetail = () => {
 
         return (
             <div>
-                <h3 className="text-gray-400 text-sm font-medium mb-3">
+                <h3 className="text-gray-300 text-sm md:text-base font-semibold mb-3">
                     Features Used ({features.length})
                 </h3>
                 <div className="flex flex-wrap gap-2 mb-3">
                     {visibleFeatures.map((feature, index) => (
                         <span
                             key={index}
-                            className="px-3 py-1.5 bg-gradient-to-r from-gray-800 to-slate-800 text-gray-300 rounded-lg text-sm border border-slate-700 hover:border-slate-600 transition-colors duration-200"
+                            className="px-3 py-1.5 bg-gradient-to-r from-gray-800 to-slate-800 text-gray-200 rounded-lg text-sm md:text-base border border-slate-700 hover:border-slate-600 transition-colors duration-200"
                         >
                             {feature.trim()}
                         </span>
@@ -313,7 +327,7 @@ const ModelDetail = () => {
                 {shouldShowToggle && (
                     <button
                         onClick={() => setShowAllFeatures(!showAllFeatures)}
-                        className="flex items-center gap-1 text-orange-500 hover:text-orange-400 text-sm font-medium transition-colors duration-200"
+                        className="flex items-center gap-1 text-orange-400 hover:text-orange-300 text-sm md:text-base font-medium transition-colors duration-200"
                     >
                         {showAllFeatures ? (
                             <>
@@ -342,7 +356,7 @@ const ModelDetail = () => {
                 <div className="text-white text-center mt-10 px-4">
                     <div className="inline-flex items-center gap-3">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
-                        <span className="text-lg">
+                        <span className="text-lg md:text-xl">
                             Loading model details...
                         </span>
                     </div>
@@ -353,7 +367,7 @@ const ModelDetail = () => {
                         <div className="mb-6 md:mb-8">
                             <Link
                                 to="/home"
-                                className="flex items-center text-gray-400 hover:text-gray-300 mb-4 md:mb-6 transition-colors duration-200 text-sm md:text-base"
+                                className="flex items-center text-gray-300 hover:text-gray-200 mb-4 md:mb-6 transition-colors duration-200 text-sm md:text-base font-medium"
                             >
                                 <ChevronLeft className="w-4 h-4 md:w-5 md:h-5 mr-2" />
                                 Back to Models
@@ -369,13 +383,12 @@ const ModelDetail = () => {
                                             {modelData.model &&
                                                 modelData.model.name}
                                         </h1>
-                                        <div className="flex flex-wrap items-center gap-2 md:gap-4 text-gray-400 text-xs md:text-sm mt-2">
+                                        <div className="flex flex-wrap items-center gap-2 md:gap-4 text-gray-300 text-sm md:text-base mt-2 font-medium">
                                             <span className="flex items-center gap-1">
                                                 <Layers className="w-3 h-3 md:w-4 md:h-4 flex-shrink-0" />
                                                 <span className="truncate">
                                                     {modelData.model &&
-                                                        modelData.model
-                                                            .model_type}
+                                                        modelData.model.type}
                                                 </span>
                                             </span>
                                             <span className="flex items-center gap-1">
@@ -402,12 +415,12 @@ const ModelDetail = () => {
                                 </div>
 
                                 <div className="flex flex-wrap items-center gap-2">
-                                    <span className="px-2 md:px-3 py-1 bg-gradient-to-r from-orange-500/20 to-yellow-500/20 text-yellow-500 rounded-full text-xs md:text-sm font-medium border border-yellow-500/30">
+                                    <span className="px-2 md:px-3 py-1 bg-gradient-to-r from-orange-500/20 to-yellow-500/20 text-yellow-400 rounded-full text-sm md:text-base font-semibold border border-yellow-500/30">
                                         {isClassification
                                             ? "Classification"
                                             : "Regression"}
                                     </span>
-                                    <span className="px-2 md:px-3 py-1 bg-gradient-to-r from-slate-800 to-slate-900 text-gray-400 rounded-full text-xs md:text-sm border border-slate-700">
+                                    <span className="px-2 md:px-3 py-1 bg-gradient-to-r from-slate-800 to-slate-900 text-gray-300 rounded-full text-sm md:text-base font-medium border border-slate-700">
                                         Target:{" "}
                                         {modelData.model &&
                                             modelData.model.target_column}
@@ -420,7 +433,7 @@ const ModelDetail = () => {
                                             user["id"] && (
                                             <button
                                                 onClick={handlePublicState}
-                                                className="flex items-center gap-2 px-3 md:px-4 py-2 rounded-xl transition-all duration-200 bg-gradient-to-r from-slate-800 to-slate-900 text-gray-400 hover:text-gray-300 border border-slate-700 text-sm md:text-base flex-shrink-0"
+                                                className="flex items-center gap-2 px-3 md:px-4 py-2 rounded-xl transition-all duration-200 bg-gradient-to-r from-slate-800 to-slate-900 text-gray-300 hover:text-gray-200 border border-slate-700 text-sm md:text-base flex-shrink-0 font-medium"
                                             >
                                                 <span className="hidden sm:inline">
                                                     Make
@@ -434,10 +447,10 @@ const ModelDetail = () => {
 
                                     <button
                                         onClick={handleLike}
-                                        className={`flex items-center gap-2 px-3 md:px-4 py-2 rounded-xl transition-all duration-200 text-sm md:text-base flex-shrink-0 ${
+                                        className={`flex items-center gap-2 px-3 md:px-4 py-2 rounded-xl transition-all duration-200 text-sm md:text-base flex-shrink-0 font-medium ${
                                             isLiked
                                                 ? "bg-gradient-to-r from-orange-500 to-yellow-500 text-gray-900"
-                                                : "bg-gradient-to-r from-slate-800 to-slate-900 text-gray-400 hover:text-gray-300 border border-slate-700"
+                                                : "bg-gradient-to-r from-slate-800 to-slate-900 text-gray-300 hover:text-gray-200 border border-slate-700"
                                         }`}
                                     >
                                         <Heart
@@ -454,7 +467,7 @@ const ModelDetail = () => {
                                             modelData.model.model_file
                                         }
                                         download
-                                        className="flex items-center gap-2 px-3 md:px-4 py-2 rounded-xl bg-gradient-to-r from-slate-800 to-slate-900 text-gray-400 hover:text-gray-300 border border-slate-700 text-sm md:text-base flex-shrink-0"
+                                        className="flex items-center gap-2 px-3 md:px-4 py-2 rounded-xl bg-gradient-to-r from-slate-800 to-slate-900 text-gray-300 hover:text-gray-200 border border-slate-700 text-sm md:text-base flex-shrink-0 font-medium"
                                     >
                                         <Save className="w-4 h-4 md:w-5 md:h-5" />
                                         <span className="hidden sm:inline">
@@ -464,7 +477,7 @@ const ModelDetail = () => {
 
                                     <button
                                         onClick={handleDownloadReport}
-                                        className="flex items-center gap-2 px-3 md:px-4 py-2 bg-gradient-to-r from-slate-800 to-slate-900 text-gray-400 hover:text-gray-300 border border-slate-700 rounded-xl transition-all duration-200 hover:border-slate-600 text-sm md:text-base flex-shrink-0"
+                                        className="flex items-center gap-2 px-3 md:px-4 py-2 bg-gradient-to-r from-slate-800 to-slate-900 text-gray-300 hover:text-gray-200 border border-slate-700 rounded-xl transition-all duration-200 hover:border-slate-600 text-sm md:text-base flex-shrink-0 font-medium"
                                     >
                                         <FileText className="w-4 h-4 md:w-5 md:h-5" />
                                         <span className="hidden sm:inline">
@@ -477,7 +490,7 @@ const ModelDetail = () => {
 
                                     <button
                                         onClick={handleTestModel}
-                                        className="flex items-center gap-2 px-3 md:px-4 py-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-gray-900 rounded-xl hover:shadow-lg hover:shadow-orange-500/30 transition-all duration-200 text-sm md:text-base flex-shrink-0"
+                                        className="flex items-center gap-2 px-3 md:px-4 py-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-gray-900 rounded-xl hover:shadow-lg hover:shadow-orange-500/30 transition-all duration-200 text-sm md:text-base flex-shrink-0 font-semibold"
                                     >
                                         <Play className="w-4 h-4 md:w-5 md:h-5" />
                                         <span>Test</span>
@@ -502,10 +515,10 @@ const ModelDetail = () => {
 
                                         {modelData.polynomial_degree && (
                                             <div>
-                                                <h3 className="text-gray-400 text-sm font-medium mb-2">
+                                                <h3 className="text-gray-300 text-sm md:text-base font-semibold mb-2">
                                                     Polynomial Degree
                                                 </h3>
-                                                <span className="px-3 py-1.5 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 text-yellow-500 rounded-lg text-sm border border-yellow-500/30">
+                                                <span className="px-3 py-1.5 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 text-yellow-400 rounded-lg text-sm md:text-base border border-yellow-500/30 font-medium">
                                                     {
                                                         modelData.model
                                                             .polynomial_degree
@@ -515,45 +528,45 @@ const ModelDetail = () => {
                                         )}
 
                                         <div>
-                                            <h3 className="text-gray-400 text-sm font-medium mb-2">
+                                            <h3 className="text-gray-300 text-sm md:text-base font-semibold mb-2">
                                                 Model ID
                                             </h3>
-                                            <div className="text-gray-300 text-xs md:text-sm font-mono bg-gradient-to-r from-gray-800 to-slate-800 p-3 rounded-lg border border-slate-700 break-all">
+                                            <div className="text-gray-200 text-xs md:text-sm font-mono bg-gradient-to-r from-gray-800 to-slate-800 p-3 rounded-lg border border-slate-700 break-all">
                                                 {modelData.model &&
                                                     modelData.model.id}
                                             </div>
                                         </div>
 
                                         <div>
-                                            <h3 className="text-gray-400 text-sm font-medium mb-2">
+                                            <h3 className="text-gray-300 text-sm md:text-base font-semibold mb-2">
                                                 Training Details
                                             </h3>
                                             <div className="space-y-2">
-                                                <div className="flex justify-between text-sm">
-                                                    <span className="text-gray-400">
+                                                <div className="flex justify-between text-sm md:text-base">
+                                                    <span className="text-gray-300 font-medium">
                                                         Algorithm:
                                                     </span>
-                                                    <span className="text-gray-300">
+                                                    <span className="text-gray-200 font-medium">
                                                         {modelData.model
                                                             ?.model_type ||
                                                             "N/A"}
                                                     </span>
                                                 </div>
-                                                <div className="flex justify-between text-sm">
-                                                    <span className="text-gray-400">
+                                                <div className="flex justify-between text-sm md:text-base">
+                                                    <span className="text-gray-300 font-medium">
                                                         Task Type:
                                                     </span>
-                                                    <span className="text-gray-300">
+                                                    <span className="text-gray-200 font-medium">
                                                         {isClassification
                                                             ? "Classification"
                                                             : "Regression"}
                                                     </span>
                                                 </div>
-                                                <div className="flex justify-between text-sm">
-                                                    <span className="text-gray-400">
+                                                <div className="flex justify-between text-sm md:text-base">
+                                                    <span className="text-gray-300 font-medium">
                                                         Status:
                                                     </span>
-                                                    <span className="text-green-400 font-medium">
+                                                    <span className="text-green-400 font-semibold">
                                                         Trained
                                                     </span>
                                                 </div>
@@ -583,18 +596,18 @@ const ModelDetail = () => {
                                 <div className="flex items-center gap-2">
                                     <button
                                         onClick={prevGraph}
-                                        className="p-2 bg-gradient-to-r from-slate-700 to-slate-800 text-gray-400 hover:text-gray-300 rounded-lg transition-colors duration-200 border border-slate-600"
+                                        className="p-2 bg-gradient-to-r from-slate-700 to-slate-800 text-gray-300 hover:text-gray-200 rounded-lg transition-colors duration-200 border border-slate-600"
                                     >
                                         <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
                                     </button>
-                                    <span className="text-gray-400 text-sm px-2">
+                                    <span className="text-gray-300 text-sm md:text-base px-2 font-medium">
                                         {currentGraphIndex + 1} /{" "}
                                         {modelData.graphs &&
                                             modelData.graphs.length}
                                     </span>
                                     <button
                                         onClick={nextGraph}
-                                        className="p-2 bg-gradient-to-r from-slate-700 to-slate-800 text-gray-400 hover:text-gray-300 rounded-lg transition-colors duration-200 border border-slate-600"
+                                        className="p-2 bg-gradient-to-r from-slate-700 to-slate-800 text-gray-300 hover:text-gray-200 rounded-lg transition-colors duration-200 border border-slate-600"
                                     >
                                         <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
                                     </button>
@@ -617,11 +630,11 @@ const ModelDetail = () => {
                                                     <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
                                                         <BarChart3 className="w-6 h-6 md:w-8 md:h-8 text-gray-900" />
                                                     </div>
-                                                    <p className="text-gray-400 text-sm">
+                                                    <p className="text-gray-300 text-sm md:text-base font-medium">
                                                         Graph image not
                                                         available
                                                     </p>
-                                                    <p className="text-gray-500 text-xs mt-1">
+                                                    <p className="text-gray-400 text-xs md:text-sm mt-1">
                                                         {currentGraph?.title}
                                                     </p>
                                                 </div>
@@ -635,7 +648,7 @@ const ModelDetail = () => {
                                         <h3 className="text-lg md:text-xl font-bold text-white mb-2">
                                             {currentGraph?.title}
                                         </h3>
-                                        <p className="text-gray-400 mb-4 text-sm md:text-base">
+                                        <p className="text-gray-300 mb-4 text-sm md:text-base">
                                             {currentGraph?.description}
                                         </p>
                                     </div>
@@ -681,7 +694,7 @@ const ModelDetail = () => {
                                                                 <BarChart3 className="w-4 h-4 md:w-6 md:h-6 text-gray-400" />
                                                             </div>
                                                         </div>
-                                                        <p className="text-xs text-gray-400 mt-2 truncate text-center">
+                                                        <p className="text-xs md:text-sm text-gray-300 mt-2 truncate text-center font-medium">
                                                             {graph.title}
                                                         </p>
                                                     </button>
@@ -690,33 +703,33 @@ const ModelDetail = () => {
                                     </div>
 
                                     <div className="bg-gradient-to-r from-slate-700/50 to-slate-800/50 rounded-lg p-4 border border-slate-600">
-                                        <h4 className="text-sm font-semibold text-white mb-3">
+                                        <h4 className="text-sm md:text-base font-semibold text-white mb-3">
                                             Visualization Insights
                                         </h4>
-                                        <div className="space-y-2 text-sm">
+                                        <div className="space-y-2 text-sm md:text-base">
                                             <div className="flex justify-between">
-                                                <span className="text-gray-400">
+                                                <span className="text-gray-300 font-medium">
                                                     Total Graphs:
                                                 </span>
-                                                <span className="text-gray-300">
+                                                <span className="text-gray-200 font-medium">
                                                     {modelData.graphs?.length ||
                                                         0}
                                                 </span>
                                             </div>
                                             <div className="flex justify-between">
-                                                <span className="text-gray-400">
+                                                <span className="text-gray-300 font-medium">
                                                     Current:
                                                 </span>
-                                                <span className="text-gray-300">
+                                                <span className="text-gray-200 font-medium">
                                                     {currentGraph?.title ||
                                                         "N/A"}
                                                 </span>
                                             </div>
                                             <div className="flex justify-between">
-                                                <span className="text-gray-400">
+                                                <span className="text-gray-300 font-medium">
                                                     Type:
                                                 </span>
-                                                <span className="text-gray-300">
+                                                <span className="text-gray-200 font-medium">
                                                     {isClassification
                                                         ? "Classification Analysis"
                                                         : "Regression Analysis"}
@@ -757,10 +770,10 @@ const ModelDetail = () => {
                                     {isClassification ? (
                                         <>
                                             <div className="flex items-center justify-between p-3 bg-gradient-to-r from-slate-700/50 to-slate-800/50 rounded-lg">
-                                                <span className="text-gray-400 text-sm">
+                                                <span className="text-gray-300 text-sm md:text-base font-medium">
                                                     Overall Accuracy
                                                 </span>
-                                                <span className="text-white font-semibold">
+                                                <span className="text-white font-semibold text-base md:text-lg">
                                                     {modelData.metrics &&
                                                         formatPercentage(
                                                             modelData.metrics
@@ -769,10 +782,10 @@ const ModelDetail = () => {
                                                 </span>
                                             </div>
                                             <div className="flex items-center justify-between p-3 bg-gradient-to-r from-slate-700/50 to-slate-800/50 rounded-lg">
-                                                <span className="text-gray-400 text-sm">
+                                                <span className="text-gray-300 text-sm md:text-base font-medium">
                                                     Best Metric
                                                 </span>
-                                                <span className="text-green-400 font-semibold">
+                                                <span className="text-green-400 font-semibold text-base md:text-lg">
                                                     {modelData.metrics &&
                                                         (modelData.metrics
                                                             .f1_score > 0.8
@@ -788,10 +801,10 @@ const ModelDetail = () => {
                                     ) : (
                                         <>
                                             <div className="flex items-center justify-between p-3 bg-gradient-to-r from-slate-700/50 to-slate-800/50 rounded-lg">
-                                                <span className="text-gray-400 text-sm">
+                                                <span className="text-gray-300 text-sm md:text-base font-medium">
                                                     R² Score
                                                 </span>
-                                                <span className="text-white font-semibold">
+                                                <span className="text-white font-semibold text-base md:text-lg">
                                                     {modelData.metrics &&
                                                         formatNumber(
                                                             modelData.metrics
@@ -800,10 +813,10 @@ const ModelDetail = () => {
                                                 </span>
                                             </div>
                                             <div className="flex items-center justify-between p-3 bg-gradient-to-r from-slate-700/50 to-slate-800/50 rounded-lg">
-                                                <span className="text-gray-400 text-sm">
+                                                <span className="text-gray-300 text-sm md:text-base font-medium">
                                                     Model Quality
                                                 </span>
-                                                <span className="text-green-400 font-semibold">
+                                                <span className="text-green-400 font-semibold text-base md:text-lg">
                                                     {modelData.metrics &&
                                                         (modelData.metrics
                                                             .r2_score > 0.8
@@ -825,19 +838,19 @@ const ModelDetail = () => {
                                 </h3>
                                 <div className="space-y-3">
                                     <div className="flex items-center justify-between p-3 bg-gradient-to-r from-slate-700/50 to-slate-800/50 rounded-lg">
-                                        <span className="text-gray-400 text-sm">
+                                        <span className="text-gray-300 text-sm md:text-base font-medium">
                                             Total Likes
                                         </span>
-                                        <span className="text-white font-semibold">
+                                        <span className="text-white font-semibold text-base md:text-lg">
                                             {likeCount}
                                         </span>
                                     </div>
                                     <div className="flex items-center justify-between p-3 bg-gradient-to-r from-slate-700/50 to-slate-800/50 rounded-lg">
-                                        <span className="text-gray-400 text-sm">
+                                        <span className="text-gray-300 text-sm md:text-base font-medium">
                                             Visibility
                                         </span>
                                         <span
-                                            className={`font-semibold ${
+                                            className={`font-semibold text-base md:text-lg ${
                                                 modelData.model?.is_public
                                                     ? "text-green-400"
                                                     : "text-yellow-400"
@@ -849,10 +862,10 @@ const ModelDetail = () => {
                                         </span>
                                     </div>
                                     <div className="flex items-center justify-between p-3 bg-gradient-to-r from-slate-700/50 to-slate-800/50 rounded-lg">
-                                        <span className="text-gray-400 text-sm">
+                                        <span className="text-gray-300 text-sm md:text-base font-medium">
                                             Created
                                         </span>
-                                        <span className="text-white font-semibold">
+                                        <span className="text-white font-semibold text-base md:text-lg">
                                             {modelData.model &&
                                                 new Date(
                                                     modelData.model.created_at
